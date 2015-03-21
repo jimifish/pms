@@ -107,7 +107,7 @@
     NSLog(@"%@", strURL);
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     AFHTTPRequestSerializer *requestSerializer = [AFHTTPRequestSerializer serializer];
-    [requestSerializer setValue:@"Basic cG1zOnhLY0ZZdjE4" forHTTPHeaderField:@"Authorization"];
+    [requestSerializer setValue:PMS_BASIC_AUTH forHTTPHeaderField:HTTP_AUTH_HEADER];
     manager.securityPolicy.allowInvalidCertificates = YES;
     manager.requestSerializer = requestSerializer;
     [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
