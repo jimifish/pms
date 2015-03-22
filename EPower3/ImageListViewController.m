@@ -80,6 +80,84 @@
     [refreshControl endRefreshing];
 }
 
+- (IBAction)didAction:(id)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:@"Image List Action"
+                                                            delegate:self
+                                                   cancelButtonTitle:@"Cancel"
+                                              destructiveButtonTitle:@"Delete Computer Folder"
+                                                   otherButtonTitles:nil, nil];
+    
+    //也可以透過此方式新增按鈕
+    //[actionSheet addButtonWithTitle:@"MSN"];
+    
+    //將actionSheet顯示於畫面上
+    [actionSheet showInView:self.view];
+}
+
+
+//判斷ActionSheet按鈕事件
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    //將按鈕的Title當作判斷的依據
+    NSLog(@"%ld", (long)buttonIndex);
+    
+    if(buttonIndex == 1)return;
+    
+    NSString* msg = [NSString stringWithFormat: @"Do you want to delete all images of %@?", self.device.computerName];
+    UIAlertView* alert = [[UIAlertView alloc]initWithTitle:@"Confirm" message:msg delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    alert.tag = 10;
+    
+    [alert show];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (alertView.tag)
+    {
+        case 10:
+        {
+            if(buttonIndex == 1)
+            {
+                AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+                manager.securityPolicy.allowInvalidCertificates = YES;
+                NSString* strURL = [NSString stringWithFormat:@"%@%d&%@=%@",
+                                    PMS_WEBAPP_REQ_URI,
+                                    SRV_CLEINT_REQ_DEL_FOLDER,
+                                    KEY_COMPUTERNAME,
+                                    self.device.computerName];
+                strURL = [Helper EncodeURI:strURL];
+                NSLog(@"%@", strURL);
+                [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+                 {
+                     @try
+                     {
+                         NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
+                         NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
+                         if(nRet == RET_SUCCESS)
+                         {
+                             NSLog(@"Del computer folder success!");
+                         }
+                     }
+                     @catch (NSException *exception) {
+                         NSLog(@"%@", [exception description]);
+                     }
+                     
+                     //NSLog(@"Device count: %d", [self.devices count]);
+                     
+                     //[self.tableView reloadData];
+                     
+                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                     NSLog(@"Error: %@", error);
+                     NSLog(@"%@", operation.responseString);
+                 }];
+            }
+            break;
+        default:
+            break;
+        }
+    }
+}
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -168,7 +246,7 @@
         manager.securityPolicy.allowInvalidCertificates = YES;
         NSString* strURL = [NSString stringWithFormat:@"%@%d&%@=%@&FolderName=%@",
                             PMS_WEBAPP_REQ_URI,
-                            SRV_CLEINT_REQ_DEL_IMG,
+                            SRV_CLEINT_REQ_DEL_FOLDER,
                             KEY_COMPUTERNAME,
                             self.device.computerName,
                             folderName];

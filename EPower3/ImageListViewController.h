@@ -10,7 +10,7 @@
 
 @class Device;
 
-@interface ImageListViewController : UITableViewController
+@interface ImageListViewController : UITableViewController<UIActionSheetDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tblImageList;
 
@@ -19,5 +19,7 @@
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 
 -(void) refresh;
+
+- (IBAction)didAction:(id)sender;
 
 @end

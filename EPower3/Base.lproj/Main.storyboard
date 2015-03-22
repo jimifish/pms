@@ -620,7 +620,7 @@
             </objects>
             <point key="canvasLocation" x="3509" y="-504"/>
         </scene>
-        <!--Image List View Controller-->
+        <!--ImageList View-->
         <scene sceneID="7Iw-mS-pV3">
             <objects>
                 <tableViewController storyboardIdentifier="ImageList" id="dZQ-yN-Kof" customClass="ImageListViewController" sceneMemberID="viewController">
@@ -639,7 +639,13 @@
                             </tableViewCell>
                         </prototypes>
                     </tableView>
-                    <navigationItem key="navigationItem" id="9eB-Ft-gQn"/>
+                    <navigationItem key="navigationItem" title="ImageList View" id="9eB-Ft-gQn">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="pa8-Hh-Fky">
+                            <connections>
+                                <action selector="didAction:" destination="dZQ-yN-Kof" id="ZtS-QF-Rbk"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tblImageList" destination="hvS-lM-2DY" id="Qmv-Y5-evf"/>
                     </connections>
