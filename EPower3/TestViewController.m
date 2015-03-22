@@ -16,7 +16,11 @@
 
 @end
 
+
 @implementation TestViewController
+
+@synthesize tbxEmail;
+@synthesize tbxPasswd;
 
 - (IBAction)onClickGetCategory:(id)sender {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -48,8 +52,46 @@
     
 }
 
-- (IBAction)btnLoginClick:(id)sender {
-    NSString* strEmail = _tbxEmail.text;
+- (IBAction)didLogin:(id)sender {
+    BOOL bSuccess = true;
+    
+    @try
+    {
+        if ([[self.tbxPasswd text] isEqualToString:PMS_PASSWD])
+        {
+            NSLog(@"Pass");
+        }
+        else
+        {
+            bSuccess = false;
+            [self alertStatus:@"Invalid password" :@"Login failed" :0];
+        }
+
+    }
+    @catch (NSException *exception) {
+        bSuccess = false;
+    }
+    
+    if(bSuccess)
+    {
+        [self performSegueWithIdentifier:@"login_success" sender:self];
+    }
+}
+
+- (void) alertStatus:(NSString *)msg :(NSString *)title :(int) tag
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                        message:msg
+                                                       delegate:self
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil, nil];
+    alertView.tag = tag;
+    [alertView show];
+}
+
+
+- (IBAction)didSignup:(id)sender {
+    NSString* strEmail = tbxEmail.text;
     strEmail = [strEmail stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     NSString* strDeviceToken = [[NSUserDefaults standardUserDefaults] stringForKey:KEY_DEVICE_TOKEN];
@@ -112,7 +154,7 @@
         NSEnumerator *e = [contents objectEnumerator];
         NSString *filename;
         
-        // clean all for now
+        // clean all for now1
         while ((filename = [e nextObject])) {
 //            if ([[filename pathExtension] isEqualToString:extension]) {
 //                
@@ -131,4 +173,12 @@
     }
 }
 
+- (IBAction)backgroundTap:(id)sender {
+    [self.view endEditing:YES];
+}
+
+//- (IBAction)didEditFieldDone:(id)sender {
+//    //取消目前是第一回應者（鍵盤消失）
+//    [sender resignFirstResponder];
+//}
 @end

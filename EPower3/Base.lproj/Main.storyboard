@@ -248,7 +248,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" id="Vg2-yg-UkI">
-                                <rect key="frame" x="115" y="209" width="69" height="30"/>
+                                <rect key="frame" x="115" y="290" width="69" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal">
                                     <attributedString key="attributedTitle">
@@ -260,11 +260,18 @@
                                     </attributedString>
                                 </state>
                                 <connections>
-                                    <action selector="btnLoginClick:" destination="sa4-uc-pAS" eventType="touchUpInside" id="2Yc-fh-wHn"/>
+                                    <action selector="didLogin:" destination="sa4-uc-pAS" eventType="touchUpInside" id="lsw-K6-rtP"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="gU0-V4-sQq">
                                 <rect key="frame" x="52" y="164" width="216" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="xe6-Re-XEZ">
+                                <rect key="frame" x="52" y="235" width="216" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -277,18 +284,15 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="xn2-qq-1sI">
-                                <rect key="frame" x="243" y="395" width="46" height="30"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jCV-cs-Iss">
+                                <rect key="frame" x="52" y="206" width="98" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Next">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="bfQ-jQ-rNp" kind="modal" id="O2u-F3-fYM"/>
-                                </connections>
-                            </button>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="s7f-Hk-P2i">
-                                <rect key="frame" x="100" y="279" width="98" height="30"/>
+                                <rect key="frame" x="100" y="344" width="98" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Clean cache">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -297,16 +301,47 @@
                                     <action selector="didCleanCache:" destination="sa4-uc-pAS" eventType="touchUpInside" id="hnn-VF-S05"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YOo-B0-E18">
+                                <rect key="frame" x="207" y="290" width="61" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Signup">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didSignup:" destination="sa4-uc-pAS" eventType="touchUpInside" id="YNv-ef-HnO"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="xn2-qq-1sI">
+                                <rect key="frame" x="9" y="290" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Next">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="bfQ-jQ-rNp" kind="modal" identifier="login_success" id="O2u-F3-fYM"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="eIE-qR-kVM" appends="YES" id="5my-Lo-v96"/>
+                        </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="Devices" id="ip1-sV-nAQ"/>
                     <connections>
                         <outlet property="tbxEmail" destination="gU0-V4-sQq" id="8Fi-jE-d0H"/>
+                        <outlet property="tbxPasswd" destination="xe6-Re-XEZ" id="dcX-N0-NhP"/>
                         <outlet property="textViewCategory" destination="aoj-OI-rpd" id="3bL-a5-YzT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l2O-sJ-1g8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="eIE-qR-kVM">
+                    <connections>
+                        <action selector="backgroundTap:" destination="sa4-uc-pAS" id="8Xd-Qv-rin"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="969" y="146"/>
         </scene>
