@@ -112,7 +112,7 @@
         NSEnumerator *e = [contents objectEnumerator];
         NSString *filename;
         
-        // clean all for now
+        // clean all for now1
         while ((filename = [e nextObject])) {
 //            if ([[filename pathExtension] isEqualToString:extension]) {
 //                
