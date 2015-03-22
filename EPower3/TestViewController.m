@@ -101,4 +101,34 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)didCleanCache:(id)sender {
+    @try {
+        //NSString *extension = @"jpg";
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        
+        NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
+        NSEnumerator *e = [contents objectEnumerator];
+        NSString *filename;
+        
+        // clean all for now
+        while ((filename = [e nextObject])) {
+//            if ([[filename pathExtension] isEqualToString:extension]) {
+//                
+//                [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+//            }
+            [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+        }
+        
+        NSArray* tmpDirectory = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:NSTemporaryDirectory() error:NULL];
+        for (NSString *file in tmpDirectory) {
+            [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", NSTemporaryDirectory(), file] error:NULL];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"%@", exception.description);
+    }
+}
+
 @end
