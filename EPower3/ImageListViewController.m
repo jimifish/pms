@@ -157,6 +157,53 @@
     tnvc.folderName = folderName;
 }
 
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        
+        NSString* folderName = [imageList objectAtIndex:indexPath.row];
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        manager.securityPolicy.allowInvalidCertificates = YES;
+        NSString* strURL = [NSString stringWithFormat:@"%@%d&%@=%@&FolderName=%@",
+                            PMS_WEBAPP_REQ_URI,
+                            SRV_CLEINT_REQ_DEL_IMG,
+                            KEY_COMPUTERNAME,
+                            self.device.computerName,
+                            folderName];
+        strURL = [Helper EncodeURI:strURL];
+        NSLog(@"%@", strURL);
+        [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+         {
+             @try
+             {
+                 NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
+                 NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
+                 if(nRet == RET_SUCCESS)
+                 {
+                     [self.imageList removeObjectAtIndex:indexPath.row];
+                     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation: UITableViewRowAnimationFade];
+                 }
+             }
+             @catch (NSException *exception) {
+                 NSLog(@"%@", [exception description]);
+             }
+             
+             //NSLog(@"Device count: %d", [self.devices count]);
+             
+             //[self.tableView reloadData];
+             
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             NSLog(@"Error: %@", error);
+             NSLog(@"%@", operation.responseString);
+         }];
+    }
+    else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }
+}
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
