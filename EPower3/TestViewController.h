@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TestViewController : UIViewController
+@interface TestViewController : UIViewController <UITextFieldDelegate>
 @property (strong, nonatomic) IBOutlet UITextView *textViewCategory;
 @property (strong, nonatomic) IBOutlet UITextField *tbxEmail;
+@property (strong, nonatomic) IBOutlet UITextField *tbxPasswd;
+//- (IBAction)didEditFieldDone:(id)sender;
 
 @end
