@@ -32,6 +32,8 @@
 #define IMG_CIRCLE_RED    @"Circle_Red_16x16.png"
 #define IMG_CIRCLE_GREEN    @"Circle_Green_16x16.png"
 #define IMG_CIRCLE_ORANGE    @"Circle_Orange_16x16.png"
+#define IMG_COLLECTION_SMALL    @"collection_small.png"
+#define IMG_GENERIC_SMALL   @"generic_small.png"
 
 #define ID_PAGE_DEVICE_DETAIL  @"DeviceDetail"
 #define ID_PAGE_DEVICE_IMAGE    @"DeviceImage"
@@ -40,6 +42,7 @@
 #define ID_PAGE_IMAGE_LIST  @"ImageList"
 #define ID_PAGE_THUMBNAIL_LIST  @"ThumbnailList"
 #define ID_PAGE_IMAGE_VIEW  @"ImageView"
+#define ID_PAGE_FS_LIST @"FSList"
 
 #define DEVICE_ORDER_BY_JOIN_TIME 0
 #define DEVICE_ORDER_BY_UPDATE_TIME 1

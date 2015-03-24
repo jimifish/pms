@@ -35,6 +35,12 @@
 		BF60FC80180F71BC00E8C03E /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = BF60FC7F180F71BC00E8C03E /* Player.m */; };
 		BF60FC86180FB15500E8C03E /* PlayerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF60FC85180FB15500E8C03E /* PlayerCell.m */; };
 		BF60FC89180FC6B500E8C03E /* PlayerDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF60FC88180FC6B500E8C03E /* PlayerDetailsViewController.m */; };
+		BF6702D91AC04C6100B8790E /* FSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF6702D81AC04C6100B8790E /* FSViewController.m */; };
+		BF6702DC1AC0573800B8790E /* FSCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF6702DB1AC0573800B8790E /* FSCell.m */; };
+		BF6702E41AC17A9100B8790E /* collection_small.png in Resources */ = {isa = PBXBuildFile; fileRef = BF6702E11AC17A9100B8790E /* collection_small.png */; };
+		BF6702E51AC17A9100B8790E /* Finder.png in Resources */ = {isa = PBXBuildFile; fileRef = BF6702E21AC17A9100B8790E /* Finder.png */; };
+		BF6702E61AC17A9100B8790E /* generic_small.png in Resources */ = {isa = PBXBuildFile; fileRef = BF6702E31AC17A9100B8790E /* generic_small.png */; };
+		BF6702E91AC17AEA00B8790E /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = BF6702E81AC17AEA00B8790E /* File.m */; };
 		BF888EEE182A38510095B77A /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF888EED182A38510095B77A /* TestViewController.m */; };
 		BF888EF0182A39CB0095B77A /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF888EEF182A39CB0095B77A /* libicucore.dylib */; };
 		BF888EF2182A39D60095B77A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF888EF1182A39D60095B77A /* CFNetwork.framework */; };
@@ -97,6 +103,15 @@
 		BF60FC85180FB15500E8C03E /* PlayerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerCell.m; sourceTree = "<group>"; };
 		BF60FC87180FC6B500E8C03E /* PlayerDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerDetailsViewController.h; sourceTree = "<group>"; };
 		BF60FC88180FC6B500E8C03E /* PlayerDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerDetailsViewController.m; sourceTree = "<group>"; };
+		BF6702D71AC04C6100B8790E /* FSViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSViewController.h; sourceTree = "<group>"; };
+		BF6702D81AC04C6100B8790E /* FSViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSViewController.m; sourceTree = "<group>"; };
+		BF6702DA1AC0573800B8790E /* FSCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSCell.h; sourceTree = "<group>"; };
+		BF6702DB1AC0573800B8790E /* FSCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSCell.m; sourceTree = "<group>"; };
+		BF6702E11AC17A9100B8790E /* collection_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = collection_small.png; sourceTree = "<group>"; };
+		BF6702E21AC17A9100B8790E /* Finder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Finder.png; sourceTree = "<group>"; };
+		BF6702E31AC17A9100B8790E /* generic_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = generic_small.png; sourceTree = "<group>"; };
+		BF6702E71AC17AEA00B8790E /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
+		BF6702E81AC17AEA00B8790E /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
 		BF888EEC182A38510095B77A /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
 		BF888EED182A38510095B77A /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 		BF888EEF182A39CB0095B77A /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
@@ -131,6 +146,9 @@
 		BF026CF818364AA500B89BEB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				BF6702E11AC17A9100B8790E /* collection_small.png */,
+				BF6702E21AC17A9100B8790E /* Finder.png */,
+				BF6702E31AC17A9100B8790E /* generic_small.png */,
 				BF026CF918364ADD00B89BEB /* Circle_Green_16x16.png */,
 				BF026CFA18364ADD00B89BEB /* Circle_Grey_16x16.png */,
 				BF026CFB18364ADD00B89BEB /* Circle_Orange_16x16.png */,
@@ -178,6 +196,8 @@
 		BF60FC4A180F6B3C00E8C03E /* EPower3 */ = {
 			isa = PBXGroup;
 			children = (
+				BF6702E71AC17AEA00B8790E /* File.h */,
+				BF6702E81AC17AEA00B8790E /* File.m */,
 				BF48F2251ABD4C5900AECEC6 /* Private.h */,
 				BF026CF818364AA500B89BEB /* Images */,
 				BF60FC53180F6B3C00E8C03E /* AppDelegate.h */,
@@ -220,6 +240,10 @@
 				BF3DCB85184EE53900F8B21B /* ImageViewController.m */,
 				BF3B9D191857714000E6E28E /* Helper.h */,
 				BF3B9D1A1857714000E6E28E /* Helper.m */,
+				BF6702D71AC04C6100B8790E /* FSViewController.h */,
+				BF6702D81AC04C6100B8790E /* FSViewController.m */,
+				BF6702DA1AC0573800B8790E /* FSCell.h */,
+				BF6702DB1AC0573800B8790E /* FSCell.m */,
 			);
 			path = EPower3;
 			sourceTree = "<group>";
@@ -263,6 +287,7 @@
 				BF60FC3D180F6B3C00E8C03E /* Sources */,
 				BF60FC3E180F6B3C00E8C03E /* Frameworks */,
 				BF60FC3F180F6B3C00E8C03E /* Resources */,
+				BF6702EA1AC18CAF00B8790E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -313,16 +338,35 @@
 				BF026D0118364ADE00B89BEB /* Circle_Red_16x16.png in Resources */,
 				BF947F51184380FA003F308B /* Images-3.xcassets in Resources */,
 				BF0E57EB185E0B770030535B /* Desktop_144x80.png in Resources */,
+				BF6702E51AC17A9100B8790E /* Finder.png in Resources */,
+				BF6702E41AC17A9100B8790E /* collection_small.png in Resources */,
 				BF60FC4F180F6B3C00E8C03E /* InfoPlist.strings in Resources */,
 				BF026D0018364ADE00B89BEB /* Circle_Orange_16x16.png in Resources */,
 				BF026CFF18364ADE00B89BEB /* Circle_Grey_16x16.png in Resources */,
 				BF60FC58180F6B3C00E8C03E /* Main.storyboard in Resources */,
+				BF6702E61AC17A9100B8790E /* generic_small.png in Resources */,
 				BF026CFE18364ADE00B89BEB /* Circle_Green_16x16.png in Resources */,
 				BF026D0218364ADE00B89BEB /* Circle_Yellow_16x16.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BF6702EA1AC18CAF00B8790E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp -rf Files \"${BUILT_PRODUCTS_DIR}/${CONTENTS_FOLDER_PATH}/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BF60FC3D180F6B3C00E8C03E /* Sources */ = {
@@ -338,10 +382,13 @@
 				BF3DCB86184EE53900F8B21B /* ImageViewController.m in Sources */,
 				BF60FC55180F6B3C00E8C03E /* AppDelegate.m in Sources */,
 				BF026CF1183366C300B89BEB /* Device.m in Sources */,
+				BF6702E91AC17AEA00B8790E /* File.m in Sources */,
+				BF6702D91AC04C6100B8790E /* FSViewController.m in Sources */,
 				BF3B9D1B1857714000E6E28E /* Helper.m in Sources */,
 				BF947F4A1842DF01003F308B /* DeviceDetailViewController.m in Sources */,
 				BF60FC51180F6B3C00E8C03E /* main.m in Sources */,
 				BF3DCB83184EDA3A00F8B21B /* ThumbnailViewController.m in Sources */,
+				BF6702DC1AC0573800B8790E /* FSCell.m in Sources */,
 				BF60FC86180FB15500E8C03E /* PlayerCell.m in Sources */,
 				BF60FC80180F71BC00E8C03E /* Player.m in Sources */,
 				BF888EEE182A38510095B77A /* TestViewController.m in Sources */,

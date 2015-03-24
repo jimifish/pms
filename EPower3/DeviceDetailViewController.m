@@ -13,6 +13,7 @@
 #import "InternalIPViewController.h"
 #import "PowerActionViewController.h"
 #import "ImageListViewController.h"
+#import "FSViewController.h"
 #import "Constants.h"
 #import "Private.h"
 
@@ -200,12 +201,6 @@
                 break;
             case 3: // Image view
                 @try {
-//                    UIAlertView* alert = [[UIAlertView alloc]initWithTitle:@"Image View" message:@"Under Construction" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-//                    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-//                    m_tfPassword = [alert textFieldAtIndex:0];
-//                    
-//                    alert.tag = TAG_VIEW_IMG;
-//                    [alert show];
                     ImageListViewController * imgListvc = [self.storyboard instantiateViewControllerWithIdentifier:ID_PAGE_IMAGE_LIST];
                     [self.navigationController pushViewController:imgListvc animated:YES];
                     imgListvc.device = device;
@@ -214,35 +209,46 @@
                     NSLog(@"%@", exception.description);
                 }
                 break;
-                case 4:
-                @try {
-                    return;
-                    NSInteger nShow = 0;
-                    if([self.tableView cellForRowAtIndexPath:indexPath].accessoryType == UITableViewCellAccessoryNone){
-                        [self.tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
-                        nShow = 1;
-                    }
-                    else{
-                        [self.tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryNone;
-                    }
-                    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-                    manager.securityPolicy.allowInvalidCertificates = YES;
-                    NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_TOGGLE_UI, (long)nShow];
-                    [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+            case 4: // Show UI
+            @try {
+                return;
+                NSInteger nShow = 0;
+                if([self.tableView cellForRowAtIndexPath:indexPath].accessoryType == UITableViewCellAccessoryNone){
+                    [self.tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+                    nShow = 1;
+                }
+                else{
+                    [self.tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryNone;
+                }
+                AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+                manager.securityPolicy.allowInvalidCertificates = YES;
+                NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_TOGGLE_UI, (long)nShow];
+                [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+                 {
+                     
+                     @try
                      {
                          
-                         @try
-                         {
-                             
-                         }
-                         @catch (NSException *exception) {
-                             NSLog(@"%@", [exception description]);
-                         }
-                         
-                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                         NSLog(@"Error: %@", error);
-                         NSLog(@"%@", operation.responseString);
-                     }];
+                     }
+                     @catch (NSException *exception) {
+                         NSLog(@"%@", [exception description]);
+                     }
+                     
+                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                     NSLog(@"Error: %@", error);
+                     NSLog(@"%@", operation.responseString);
+                 }];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"%@", exception.description);
+            }
+                break;
+            case 5:
+                @try {
+                    FSViewController * fsListvc = [[FSViewController alloc] init];
+                    [self.navigationController pushViewController:fsListvc animated:YES];
+                    fsListvc.device = device;
+                    fsListvc.path = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Files"];
                 }
                 @catch (NSException *exception) {
                     NSLog(@"%@", exception.description);
