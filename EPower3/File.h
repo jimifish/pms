@@ -11,8 +11,10 @@
 	NSString *name;
 }
 
-@property (assign)           BOOL       isDirectory;
+//@property (assign)           BOOL       isDirectory;
 @property (nonatomic,retain) NSString * name;
+@property (nonatomic) NSInteger type;
+@property (nonatomic,retain) NSString* path;
 
 + (UIImage*)folderImage;
 + (UIImage*)fileImage;

@@ -82,9 +82,9 @@
                     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
                     manager.securityPolicy.allowInvalidCertificates = YES;
                     NSString* strURL = [NSString stringWithFormat:@"%@3&DeviceId=%@&cmd=%d&params=%@", PMS_WEBAPP_REQ_URI, self.device.deviceId, SRV_CLINET_CMD_SEND_MSG, m_tfMSg.text];
-                    NSString* encodeURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                    NSLog(@"%@", encodeURL);
-                    [manager GET:encodeURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+                    strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    NSLog(@"%@", strURL);
+                    [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
                      {
                          
                          @try
@@ -223,6 +223,8 @@
                 AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
                 manager.securityPolicy.allowInvalidCertificates = YES;
                 NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_TOGGLE_UI, (long)nShow];
+                strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                NSLog(@"%@", strURL);
                 [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
                  {
                      
@@ -245,10 +247,41 @@
                 break;
             case 5:
                 @try {
-                    FSViewController * fsListvc = [[FSViewController alloc] init];
-                    [self.navigationController pushViewController:fsListvc animated:YES];
-                    fsListvc.device = device;
-                    fsListvc.path = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Files"];
+                    int ticketId = arc4random_uniform(9999999);
+                    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+                    manager.securityPolicy.allowInvalidCertificates = YES;
+                    NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_ENUMERATE_PATH, ticketId];
+                    strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    NSLog(@"%@", strURL);
+                    [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+                     {
+                         @try
+                         {
+                             NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
+                             NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
+                             if(nRet == RET_SUCCESS)
+                             {
+                                 sleep(1);
+                                 
+                                 FSViewController * fsListvc = [[FSViewController alloc] init];                                 
+                                 fsListvc.device = device;
+                                 fsListvc.ticketId = ticketId;
+                                 [self.navigationController pushViewController:fsListvc animated:YES];
+                                 //fsListvc.path = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Files"];
+                             }
+                             else
+                             {
+                                 NSLog(@"failed");
+                             }
+                         }
+                         @catch (NSException *exception) {
+                             NSLog(@"%@", [exception description]);
+                         }
+                         
+                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                         NSLog(@"Error: %@", error);
+                         NSLog(@"%@", operation.responseString);
+                     }];
                 }
                 @catch (NSException *exception) {
                     NSLog(@"%@", exception.description);

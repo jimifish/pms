@@ -7,7 +7,7 @@
 
 @implementation File
 
-@synthesize isDirectory,name;
+@synthesize name, type;
 
 static UIImage * s_folderImage = nil;
 static UIImage * s_fileImage   = nil;

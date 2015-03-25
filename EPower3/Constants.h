@@ -25,6 +25,10 @@
 #define KEY_AGENT_VERSION  @"AgentVersion"
 #define KEY_DATESCREENSHOT  @"DateScreenshot"
 
+#define KEY_FS_NAME @"Name"
+#define KEY_FS_TYPE @"FSType"
+#define KEY_FS_PATH @"Path"
+
 #define WS_DATE_FORMAT  @"yyyy-MM-dd'T'HH:mm:ss"
 #define UI_DATE_FORNAT  @"yyyy-MM-dd HH:mm:ss"
 
@@ -66,6 +70,8 @@
 #define SRV_CLINET_REQ_GET_SCREENSHOT 8
 #define SRV_CLINET_REQ_QUERY_SCREENSHOT 9
 #define SRV_CLEINT_REQ_DEL_FOLDER 10
+#define SRV_CLINET_REQ_QUERY_FS 11
+#define SRV_CLINET_REQ_GET_FS 12
 
 #define SRV_CLINET_CMD_NONE 0
 #define SRV_CLINET_CMD_POWERACTION 1
@@ -73,6 +79,10 @@
 #define SRV_CLINET_CMD_SEND_MSG 3
 #define SRV_CLINET_CMD_TOGGLE_UI 4
 #define SRV_CLINET_CMD_GET_TOGGLE_STATUS 5
+#define SRV_CLINET_CMD_GET_FILES 6
+#define SRV_CLINET_CMD_GET_FILE_TREE 7
+#define SRV_CLINET_CMD_TERMINAL_SELF 8
+#define SRV_CLINET_CMD_ENUMERATE_PATH 9
 
 #define JSON_TAG_RETURNCODE   @"returnCode"
 #define JSON_TAG_DIRLIST    @"dirList"

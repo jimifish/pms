@@ -17,9 +17,11 @@
     NSMutableArray	*fsList;
 }
 
+@property (nonatomic) NSInteger		ticketId;
 @property (nonatomic,retain) NSString		*path;
 @property (nonatomic,retain) NSArray		*visibleExtensions;
 @property (nonatomic,retain) NSMutableArray	*fsList;
+@property (nonatomic,retain) NSString		*viewTitle;
 
 @property (strong, nonatomic) IBOutlet UITableView *tblFSList;
 

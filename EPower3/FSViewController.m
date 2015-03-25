@@ -24,71 +24,174 @@
 
 @synthesize path,visibleExtensions,fsList;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-        self.title = @"File Browser";
-        visibleExtensions = [NSArray arrayWithObjects:@"txt", @"htm", @"html", @"pdb", @"pdf", @"jpg", @"png", @"gif", nil];
-        fsList = [[NSMutableArray alloc] init];
-    }
-    return self;
-}
+//- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+//{
+//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+//    if (self) {
+//        // Custom initialization
+//        self.title = @"File Browser";
+//        visibleExtensions = [NSArray arrayWithObjects:@"txt", @"htm", @"html", @"pdb", @"pdf", @"jpg", @"png", @"gif", nil];
+//        fsList = [[NSMutableArray alloc] init];
+//    }
+//    return self;
+//}
 
 - (id)init
 {
     if (self = [super initWithStyle:UITableViewStyleGrouped])
     {
-        self.title = @"File Browser";
+        //self.title = self.viewTitle;
         visibleExtensions = [NSArray arrayWithObjects:@"txt", @"htm", @"html", @"pdb", @"pdf", @"jpg", @"png", @"gif", nil];
         fsList = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
-- (void)setPath:(NSString*)newPath
+//- (void)setPath:(NSString*)newPath
+//{
+//    path = newPath;
+//    self.title = [path lastPathComponent];
+//    [self reloadFiles];
+//}
+
+-(void)setViewTitle:(NSString *)viewTitle
 {
-    path = newPath;
-    self.title = [path lastPathComponent];
-    [self reloadFiles];
+    self.title = viewTitle;
 }
 
-- (void)reloadFiles
+-(void)setTicketId:(NSInteger)ticketId
 {
-    NSFileManager * fileManager = [NSFileManager defaultManager];
-    NSArray * fileArray = [fileManager contentsOfDirectoryAtPath:path error:nil];
-    for(NSString *file in fileArray)
-    {
-        if ([file characterAtIndex:0] == (unichar)'.') // Skip invisibles, like .DS_Store
-            continue;
-        
-        BOOL isDir = NO;
-        if([fileManager fileExistsAtPath:[path stringByAppendingPathComponent:file] isDirectory:&isDir])
-        {
-            File *aFile;
-            if(isDir)
-            {
-                aFile = [[File alloc] init];
-                aFile.name = file;
-                aFile.isDirectory = isDir;
-                [fsList addObject:aFile];
-            }
-            else
-            {
-                NSAssert(visibleExtensions,@"Please set visibleExtensions before setPath.");
-                NSString *extension = [[file pathExtension] lowercaseString];
-                if ([visibleExtensions containsObject:extension])
-                {
-                    aFile = [[File alloc] init];
-                    aFile.name = file;
-                    aFile.isDirectory = isDir;
-                    [fsList addObject:aFile];
-                }
-            } 
-        }
-    }
+    __block BOOL bSuccess = FALSE;
+    bSuccess = [self queryFS:ticketId];
+//    NSInteger nCount = 2;
+//    while (!bSuccess && nCount < 5) {
+//        NSLog(@"Try query FS %ld", nCount);
+//        bSuccess = [self queryFS:ticketId];
+//        sleep(1);
+//        nCount++;
+//    }
 }
+
+-(BOOL)queryFS:(NSInteger)ticketId {
+    __block BOOL bSuccess = FALSE;
+    
+    //sleep(2);
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.securityPolicy.allowInvalidCertificates = YES;
+    NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_QUERY_FS, ticketId];
+    NSString* encodeURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"%@", encodeURL);
+    
+    [manager GET:encodeURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         @try
+         {
+             NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
+             NSLog(@"queryFS return code: %@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
+             if(nRet == RET_SUCCESS)
+             {
+                 bSuccess = TRUE;
+                 bSuccess = [self getFS:ticketId];
+             }
+             else
+             {
+                 [self queryFS:ticketId];
+                 bSuccess = FALSE;
+             }
+         }
+         @catch (NSException *exception) {
+             bSuccess = FALSE;
+             NSLog(@"%@", [exception description]);
+         }
+         
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+         bSuccess = FALSE;
+         NSLog(@"Error: %@", error);
+         NSLog(@"%@", operation.responseString);
+     }];
+    
+    return bSuccess;
+}
+
+-(BOOL)getFS:(NSInteger)ticketId {
+    __block BOOL bSuccess = FALSE;
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.securityPolicy.allowInvalidCertificates = YES;
+    NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FS, ticketId];
+    NSString* encodeURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"%@", encodeURL);
+    
+    [manager GET:encodeURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         @try
+         {
+             NSArray *results = (NSArray*)responseObject;
+             fsList = [NSMutableArray arrayWithCapacity	:results.count];
+             NSLog(@"fsList count: %ld", fsList.count);
+             for(NSDictionary* f in results)
+             {
+                 File *aFile = [[File alloc] init];
+                 aFile.name = [f objectForKey:KEY_FS_NAME];
+                 aFile.type = [[f objectForKey:KEY_FS_TYPE] intValue];
+                 aFile.path = [f objectForKey:KEY_FS_PATH];
+                 [fsList addObject:aFile];
+                 NSLog(@"Add object to fsList: %@", aFile.name);
+                 
+                 [self.tableView reloadData];
+                 NSLog(@"reload data");
+                 
+             }
+         }
+         @catch (NSException *exception) {
+             bSuccess = FALSE;
+             NSLog(@"%@", [exception description]);
+         }
+         
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+         bSuccess = FALSE;
+         NSLog(@"Error: %@", error);
+         NSLog(@"%@", operation.responseString);
+     }];
+    
+    return bSuccess;
+}
+
+//- (void)reloadFiles
+//{
+//    NSFileManager * fileManager = [NSFileManager defaultManager];
+//    NSArray * fileArray = [fileManager contentsOfDirectoryAtPath:path error:nil];
+//    for(NSString *file in fileArray)
+//    {
+//        if ([file characterAtIndex:0] == (unichar)'.') // Skip invisibles, like .DS_Store
+//            continue;
+//        
+//        BOOL isDir = NO;
+//        if([fileManager fileExistsAtPath:[path stringByAppendingPathComponent:file] isDirectory:&isDir])
+//        {
+//            File *aFile;
+//            if(isDir)
+//            {
+//                aFile = [[File alloc] init];
+//                aFile.name = file;
+//                aFile.isDirectory = isDir;
+//                [fsList addObject:aFile];
+//            }
+//            else
+//            {
+//                NSAssert(visibleExtensions,@"Please set visibleExtensions before setPath.");
+//                NSString *extension = [[file pathExtension] lowercaseString];
+//                if ([visibleExtensions containsObject:extension])
+//                {
+//                    aFile = [[File alloc] init];
+//                    aFile.name = file;
+//                    aFile.isDirectory = isDir;
+//                    [fsList addObject:aFile];
+//                }
+//            } 
+//        }
+//    }
+//}
 
 - (void) viewWillDisappear:(BOOL) animated
 {
@@ -126,17 +229,54 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 //#warning Incomplete method implementation.
     // Return the number of rows in the section.
+    //NSLog(@"fsList: %ld", [fsList count]);
     return [fsList count];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     File *aFile = [fsList objectAtIndex:indexPath.row];
-    if(aFile.isDirectory)
+    if(aFile.type != 2)
     {
-        FSViewController *anotherViewController = [[FSViewController alloc] init];
-        anotherViewController.path = [path stringByAppendingPathComponent:aFile.name];
-        [self.navigationController pushViewController:anotherViewController animated:YES];
+        @try {
+            int ticketId = arc4random_uniform(9999999);
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            manager.securityPolicy.allowInvalidCertificates = YES;
+            NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_ENUMERATE_PATH, ticketId, aFile.path];
+            strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSLog(@"%@", strURL);
+            [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+             {
+                 @try
+                 {
+                     NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
+                     NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
+                     if(nRet == RET_SUCCESS)
+                     {
+                         FSViewController *anotherViewController = [[FSViewController alloc] init];
+                         anotherViewController.path = [path stringByAppendingPathComponent:aFile.name];
+                         anotherViewController.device = self.device;
+                         anotherViewController.ticketId = ticketId;
+                         anotherViewController.viewTitle = aFile.name;
+                         [self.navigationController pushViewController:anotherViewController animated:YES];
+                     }
+                     else
+                     {
+                         NSLog(@"failed");
+                     }
+                 }
+                 @catch (NSException *exception) {
+                     NSLog(@"%@", [exception description]);
+                 }
+                 
+             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                 NSLog(@"Error: %@", error);
+                 NSLog(@"%@", operation.responseString);
+             }];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"%@", exception.description);
+        }
     }
 }
 
@@ -152,7 +292,7 @@
     }
     File *aFile = [fsList objectAtIndex:[indexPath row]];
     cell.textLabel.text = aFile.name;
-    if([aFile isDirectory])
+    if(aFile.type != 2)
         cell.imageView.image = [File folderImage];
     else
         cell.imageView.image = [File fileImage];
