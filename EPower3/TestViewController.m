@@ -135,6 +135,14 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    NSString * appBuildString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    
+    NSString * appVersionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    
+    NSString * versionBuildString = [NSString stringWithFormat:@"%@ (%@)", appVersionString, appBuildString];
+    
+    self.lblVersion.text = versionBuildString;
 }
 
 - (void)didReceiveMemoryWarning

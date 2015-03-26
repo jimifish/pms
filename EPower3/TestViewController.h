@@ -13,5 +13,6 @@
 @property (strong, nonatomic) IBOutlet UITextField *tbxEmail;
 @property (strong, nonatomic) IBOutlet UITextField *tbxPasswd;
 //- (IBAction)didEditFieldDone:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *lblVersion;
 
 @end
