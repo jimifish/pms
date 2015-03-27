@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 JIMMY. All rights reserved.
 //
 
+#import "ImageViewController.h"
 #import "FSViewController.h"
 #import "Device.h"
 #import "AFNetworking.h"
@@ -23,6 +24,24 @@
 @implementation FSViewController
 
 @synthesize path,visibleExtensions,fsList;
+@synthesize m_progressAlert;
+
+#pragma mark - DeviceImageViewControllerDelegate
+
+-(void)ImageViewControllerDidBack:(NSString *)fileName
+{
+    NSLog(@"%@", fileName);
+//    NSInteger idx = 0;
+//    for (NSString *key in [dictThumb allKeysForObject:fileName]) {
+//        NSLog(@"Key: %@", key);
+//        idx = [key intValue];
+//    }
+//    
+//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx - 1 inSection:0];
+//    [tblThumbnail scrollToRowAtIndexPath:indexPath
+//                        atScrollPosition:UITableViewScrollPositionTop
+//                                animated:YES];
+}
 
 //- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 //{
@@ -36,11 +55,22 @@
 //    return self;
 //}
 
-- (id)init
+//- (id)init
+//{
+//    if (self = [super initWithStyle:UITableViewStyleGrouped])
+//    {
+//        //self.title = self.viewTitle;
+//        visibleExtensions = [NSArray arrayWithObjects:@"txt", @"htm", @"html", @"pdb", @"pdf", @"jpg", @"png", @"gif", nil];
+//        fsList = [[NSMutableArray alloc] init];
+//    }
+//    return self;
+//}
+
+- (id)initWithStyle:(UITableViewStyle)style
 {
-    if (self = [super initWithStyle:UITableViewStyleGrouped])
-    {
-        //self.title = self.viewTitle;
+    self = [super initWithStyle:style];
+    if (self) {
+        // Custom initialization
         visibleExtensions = [NSArray arrayWithObjects:@"txt", @"htm", @"html", @"pdb", @"pdf", @"jpg", @"png", @"gif", nil];
         fsList = [[NSMutableArray alloc] init];
     }
@@ -61,24 +91,15 @@
 
 -(void)setTicketId:(NSInteger)ticketId
 {
-    __block BOOL bSuccess = FALSE;
-    bSuccess = [self queryFS:ticketId];
-//    NSInteger nCount = 2;
-//    while (!bSuccess && nCount < 5) {
-//        NSLog(@"Try query FS %ld", nCount);
-//        bSuccess = [self queryFS:ticketId];
-//        sleep(1);
-//        nCount++;
-//    }
+    [self queryFS:ticketId bFilesys:TRUE];
 }
 
--(BOOL)queryFS:(NSInteger)ticketId {
-    __block BOOL bSuccess = FALSE;
+-(void)queryFS:(NSInteger)ticketId bFilesys:(BOOL)isFileSys {
     
     //sleep(2);
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.securityPolicy.allowInvalidCertificates = YES;
-    NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_QUERY_FS, ticketId];
+    NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_QUERY_FS, (long)ticketId];
     NSString* encodeURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSLog(@"%@", encodeURL);
     
@@ -90,27 +111,37 @@
              NSLog(@"queryFS return code: %@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
              if(nRet == RET_SUCCESS)
              {
-                 bSuccess = TRUE;
-                 bSuccess = [self getFS:ticketId];
+                 if(isFileSys)
+                 {
+                     [self getFS:ticketId];
+                 }
+                 else
+                 {
+                     NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+                     File *aFile = [fsList objectAtIndex:selectedIndexPath.row];
+                     
+                     ImageViewController* ivc = [self.navigationController.storyboard instantiateViewControllerWithIdentifier:ID_PAGE_IMAGE_VIEW];
+                     
+                     [self.navigationController pushViewController:ivc animated:YES];
+                     ivc.device = self.device;
+                     ivc.imgFileName = aFile.name;
+                     ivc.ticketId = ticketId;
+                     ivc.delegate = self;
+                 }
              }
              else
              {
-                 [self queryFS:ticketId];
-                 bSuccess = FALSE;
+                 [self queryFS:ticketId bFilesys:isFileSys];
              }
          }
          @catch (NSException *exception) {
-             bSuccess = FALSE;
              NSLog(@"%@", [exception description]);
          }
          
      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         bSuccess = FALSE;
          NSLog(@"Error: %@", error);
          NSLog(@"%@", operation.responseString);
      }];
-    
-    return bSuccess;
 }
 
 -(BOOL)getFS:(NSInteger)ticketId {
@@ -118,7 +149,7 @@
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.securityPolicy.allowInvalidCertificates = YES;
-    NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FS, ticketId];
+    NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FS, (long)ticketId];
     NSString* encodeURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSLog(@"%@", encodeURL);
     
@@ -128,7 +159,7 @@
          {
              NSArray *results = (NSArray*)responseObject;
              fsList = [NSMutableArray arrayWithCapacity	:results.count];
-             NSLog(@"fsList count: %ld", fsList.count);
+             NSLog(@"fsList count: %ld", (long)fsList.count);
              for(NSDictionary* f in results)
              {
                  File *aFile = [[File alloc] init];
@@ -201,16 +232,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+  
+    m_progressAlert = [[UIAlertView alloc] initWithTitle:@"Loading..." message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
     
-//    self.title = @"File Browser";
-//    visibleExtensions = [NSArray arrayWithObjects:@"txt", @"htm", @"html", @"pdb", @"pdf", @"jpg", @"png", @"gif", nil];
-//    fsList = [[NSMutableArray alloc] init];
+    UIActivityIndicatorView* indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    indicator.center = CGPointMake(m_progressAlert.bounds.size.width / 2, m_progressAlert.bounds.size.height / 2 + 10);
+    [indicator startAnimating];
+    [m_progressAlert addSubview:indicator];
+}
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+-(void)showProgress{
+    [m_progressAlert show];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -235,13 +267,59 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self showProgress];
+    int ticketId = arc4random_uniform(9999999);
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.securityPolicy.allowInvalidCertificates = YES;
     File *aFile = [fsList objectAtIndex:indexPath.row];
-    if(aFile.type != 2)
+    if(aFile.type == 2)
     {
         @try {
-            int ticketId = arc4random_uniform(9999999);
-            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-            manager.securityPolicy.allowInvalidCertificates = YES;
+            NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_REQ_FILE, ticketId, aFile.path];
+            strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSLog(@"%@", strURL);
+            [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+             {
+                 @try
+                 {
+                     NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
+                     NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
+                     if(nRet == RET_SUCCESS)
+                     {
+                         [self queryFS:ticketId bFilesys:FALSE];
+//                         ImageViewController* ivc = [self.navigationController.storyboard instantiateViewControllerWithIdentifier:ID_PAGE_IMAGE_VIEW];
+//                         
+//                         [self.navigationController pushViewController:ivc animated:YES];
+//                         ivc.device = self.device;
+//                         //ivc.fileName = aFile.path;
+//                         ivc.ticketId = ticketId;
+//                         ivc.delegate = self;
+                     }
+                     else
+                     {
+                         NSLog(@"failed");
+                     }
+                 }
+                 @catch (NSException *exception) {
+                     NSLog(@"%@", [exception description]);
+                 }
+                 @finally
+                 {
+                     [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+                 }
+                 
+             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                 NSLog(@"Error: %@", error);
+                 NSLog(@"%@", operation.responseString);
+             }];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"%@", exception.description);
+        }
+    }
+    else
+    {
+        @try {
             NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_ENUMERATE_PATH, ticketId, aFile.path];
             strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             NSLog(@"%@", strURL);
@@ -267,6 +345,9 @@
                  }
                  @catch (NSException *exception) {
                      NSLog(@"%@", [exception description]);
+                 }
+                 @finally{
+                     [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
                  }
                  
              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

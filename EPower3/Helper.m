@@ -7,6 +7,9 @@
 //
 
 #import "Helper.h"
+#import "AFNetworking.h"
+#import "Constants.h"
+#import "Private.h"
 
 @implementation Helper
 
@@ -78,6 +81,5 @@
     
     return strURI;
 }
-
 
 @end

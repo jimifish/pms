@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ImageViewController.h"
+
 @class FSViewController;
 @class Device;
 
-@interface FSViewController : UITableViewController
+@interface FSViewController : UITableViewController<ImageViewControllerDelegate>
 {
     NSString		*path;
     NSArray			*visibleExtensions;
@@ -24,6 +26,7 @@
 @property (nonatomic,retain) NSString		*viewTitle;
 
 @property (strong, nonatomic) IBOutlet UITableView *tblFSList;
+@property (strong, nonatomic) UIAlertView* m_progressAlert;
 
 @property (strong, nonatomic) Device* device;
 

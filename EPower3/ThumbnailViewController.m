@@ -336,7 +336,6 @@
     [self.navigationController pushViewController:ivc animated:YES];
     ivc.device = device;
     ivc.folderName = folderName;
-    //ivc.fileName = fileName;
     ivc.dictThumb = dictThumb;
     ivc.imgIndex = path.row + 1;
     ivc.delegate = self;

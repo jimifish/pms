@@ -26,10 +26,11 @@
 
 @property (strong, nonatomic) Device* device;
 @property (strong, nonatomic) NSString* folderName;
-@property (strong, nonatomic) NSURL* imgURL;
+//@property (strong, nonatomic) NSURL* imgURL;
 @property (strong, nonatomic) NSDate* imgDate;
-//@property (strong, nonatomic) NSString* fileName;
+@property (strong, nonatomic) NSString* imgFileName;
 @property (nonatomic, strong) NSMutableDictionary* dictThumb;
+@property (nonatomic) NSInteger		ticketId;
 
 @property (nonatomic) NSInteger imgIndex;
 @property (strong, nonatomic) IBOutlet UILabel *lblFileName;

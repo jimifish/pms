@@ -26,7 +26,8 @@
 @synthesize svDevice;
 @synthesize device;
 //@synthesize fileName;
-@synthesize imgURL;
+@synthesize ticketId;
+//@synthesize imgURL;
 @synthesize imgDate;
 @synthesize dictThumb;
 @synthesize folderName;
@@ -39,15 +40,19 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.imgIndex = -1;
     }
     return self;
 }
 
 - (void) viewWillDisappear:(BOOL) animated
 {
-    NSString *inStr = [NSString stringWithFormat:@"%ld", (long)imgIndex];
-    NSString* fileName = [dictThumb objectForKey:inStr];
-    [self.delegate ImageViewControllerDidBack:fileName];
+    if(self.ticketId <= 0)
+    {
+        NSString *inStr = [NSString stringWithFormat:@"%ld", (long)imgIndex];
+        NSString* fileName = [dictThumb objectForKey:inStr];
+        [self.delegate ImageViewControllerDidBack:fileName];
+    }
 }
 
 - (void)viewDidLoad
@@ -111,23 +116,43 @@
     [imgDevice addGestureRecognizer:doubleTap];
     [imgDevice addGestureRecognizer:twoFingerTap];
     
-    NSString *inStr = [NSString stringWithFormat:@"%ld", (long)imgIndex];
-    NSString* fileName = [dictThumb objectForKey:inStr];
-    [self loadImage:fileName];
+    NSString* strURL = @"";
+    
+    if(self.ticketId > 0)
+    {
+        strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FILE, (long)self.ticketId];
+        lblFileName.text = self.imgFileName;
+    }
+    else
+    {
+        NSString *inStr = [NSString stringWithFormat:@"%ld", (long)imgIndex];
+        NSString* imageName = [dictThumb objectForKey:inStr];
+        
+        self.imgDate = [Helper GetPicDate:imageName];
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm:ss"];
+        lblFileName.text = [dateFormatter stringFromDate:self.imgDate];
+        
+        strURL = [NSString stringWithFormat:@"%@%d&ComputerName=%@&FolderName=%@&FileName=%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_DEVICE_PIC, self.device.computerName, folderName, imageName];
+    }
+    
+    NSLog(@"%@", strURL);
+    
+    [self loadImage:strURL];
 }
 
 -(void)showProgress{
     [m_progressAlert show];
 }
 
--(void)loadImage: (NSString*) imageName{
+-(void)loadImage: (NSString*) strURL{
     
     [self showProgress];
     
-    self.imgDate = [Helper GetPicDate:imageName];
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"HH:mm:ss"];
-    lblFileName.text = [dateFormatter stringFromDate:self.imgDate];
+//    self.imgDate = [Helper GetPicDate:imageName];
+//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+//    [dateFormatter setDateFormat:@"HH:mm:ss"];
+//    lblFileName.text = [dateFormatter stringFromDate:self.imgDate];
 
 //    float w = [[UIScreen mainScreen] bounds].size.width;
 //    lblFileName.frame = CGRectMake(0, 10, w, 20);
@@ -135,12 +160,11 @@
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
     manager.securityPolicy.allowInvalidCertificates = YES;
-    NSString* strURL = [NSString stringWithFormat:@"%@%d&ComputerName=%@&FolderName=%@&FileName=%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_DEVICE_PIC, self.device.computerName, folderName, imageName];
+    
     strURL = [Helper EncodeURI:strURL];
     NSLog(@"%@", strURL);
     NSURL *URL = [NSURL URLWithString:strURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    
     @try {
         NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
             NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
@@ -148,7 +172,8 @@
         } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
             NSLog(@"File downloaded to: %@", filePath);
             imgDevice.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
-            self.imgURL = filePath;
+            //imgDevice.image = [UIImage imageNamed:@"Desktop_144x80.png"];
+            //self.imgURL = filePath;
             //[self fitImage];
         }];
         [downloadTask resume];
@@ -231,8 +256,11 @@
         return;
     
     NSString *inStr = [NSString stringWithFormat:@"%ld", (long)imgIndex];
-    NSString* fileName = [dictThumb objectForKey:inStr];
-    [self loadImage:fileName];
+    NSString* imageName = [dictThumb objectForKey:inStr];
+    
+    NSString* strURL = [NSString stringWithFormat:@"%@%d&ComputerName=%@&FolderName=%@&FileName=%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_DEVICE_PIC, self.device.computerName, folderName, imageName];
+    
+    [self loadImage:strURL];
     
 }
 
