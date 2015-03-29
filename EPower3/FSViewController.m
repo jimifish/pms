@@ -18,7 +18,7 @@
 
 
 @interface FSViewController ()
-
+@property (nonatomic, strong) UIDocumentInteractionController *controller;
 @end
 
 @implementation FSViewController
@@ -72,6 +72,8 @@
     if (self) {
         // Custom initialization
         visibleExtensions = [NSArray arrayWithObjects:@"txt", @"htm", @"html", @"pdb", @"pdf", @"jpg", @"png", @"gif", nil];
+        
+        imgExtensions = [NSArray arrayWithObjects:@"jpg", @"jpeg", @"png", @"gif", @"bmp", nil];
         fsList = [[NSMutableArray alloc] init];
     }
     return self;
@@ -120,13 +122,72 @@
                      NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
                      File *aFile = [fsList objectAtIndex:selectedIndexPath.row];
                      
-                     ImageViewController* ivc = [self.navigationController.storyboard instantiateViewControllerWithIdentifier:ID_PAGE_IMAGE_VIEW];
+                     BOOL isImage = FALSE;
+                     NSString* strExt = [aFile.path pathExtension];
+                     for(NSString* ext in imgExtensions)
+                     {
+                         if([ext isEqualToString:strExt])
+                         {
+                             isImage = TRUE;
+                             break;
+                         }
+                     }
                      
-                     [self.navigationController pushViewController:ivc animated:YES];
-                     ivc.device = self.device;
-                     ivc.imgFileName = aFile.name;
-                     ivc.ticketId = ticketId;
-                     ivc.delegate = self;
+                     if(isImage)
+                     {
+                         ImageViewController* ivc = [self.navigationController.storyboard instantiateViewControllerWithIdentifier:ID_PAGE_IMAGE_VIEW];
+                         
+                         [self.navigationController pushViewController:ivc animated:YES];
+                         ivc.device = self.device;
+                         ivc.imgFileName = aFile.name;
+                         ivc.ticketId = ticketId;
+                         ivc.delegate = self;
+                     }
+                     else
+                     {
+                         NSLog(@"Not image");
+                         
+                         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+                         AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+                         manager.securityPolicy.allowInvalidCertificates = YES;
+                         
+                         NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FILE, (long)self.ticketId];
+
+                         strURL = [Helper EncodeURI:strURL];
+                         NSLog(@"%@", strURL);
+                         NSURL *URL = [NSURL URLWithString:strURL];
+                         NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+                         @try {
+                             NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+                                 NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
+                                 return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
+                             } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+                                 NSLog(@"File downloaded to: %@", filePath);
+                                 
+                                 NSString* downloadFilePath = [NSString stringWithFormat:@"Documents/%@.%@", aFile.name, strExt];
+                                 
+                                 NSString *fPath=[NSHomeDirectory() stringByAppendingPathComponent:downloadFilePath];
+                                 
+                                 NSURL *fileURL = [[NSURL alloc] initWithString:[[NSString alloc] initWithFormat:@"file://%@",fPath]];
+//                                 
+//                                 self.controller.URL = fileURL;
+//                                 [self.controller presentOptionsMenuFromRect:(CGRectZero) inView:self.view animated:YES];
+                                 
+                                 self.controller = [UIDocumentInteractionController interactionControllerWithURL:fileURL];
+                                 // Present the app picker display
+                                 [self.controller presentOptionsMenuFromRect:(CGRectZero) inView:self.view animated:YES];
+                                 
+                                 //TTOpenInAppActivity
+                             }];
+                             [downloadTask resume];
+                         }
+                         @catch (NSException *exception) {
+                             NSLog(@"%@", exception.description);
+                         }
+                         @finally{
+                             [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+                         }
+                     }
                  }
              }
              else
@@ -142,6 +203,15 @@
          NSLog(@"Error: %@", error);
          NSLog(@"%@", operation.responseString);
      }];
+}
+
+- (UIDocumentInteractionController *)controller {
+    
+    if (!_controller) {
+        _controller = [[UIDocumentInteractionController alloc]init];
+        _controller.delegate = self;
+    }
+    return _controller;
 }
 
 -(BOOL)getFS:(NSInteger)ticketId {
@@ -287,13 +357,6 @@
                      if(nRet == RET_SUCCESS)
                      {
                          [self queryFS:ticketId bFilesys:FALSE];
-//                         ImageViewController* ivc = [self.navigationController.storyboard instantiateViewControllerWithIdentifier:ID_PAGE_IMAGE_VIEW];
-//                         
-//                         [self.navigationController pushViewController:ivc animated:YES];
-//                         ivc.device = self.device;
-//                         //ivc.fileName = aFile.path;
-//                         ivc.ticketId = ticketId;
-//                         ivc.delegate = self;
                      }
                      else
                      {
@@ -424,5 +487,23 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - Delegate Methods
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
+    
+    return  self;
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application {
+    
+    NSLog(@"Starting to send this puppy to %@", application);
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application {
+    
+    NSLog(@"We're done sending the document.");
+}
+
 
 @end

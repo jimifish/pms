@@ -12,10 +12,11 @@
 @class FSViewController;
 @class Device;
 
-@interface FSViewController : UITableViewController<ImageViewControllerDelegate>
+@interface FSViewController : UITableViewController<ImageViewControllerDelegate, UIDocumentInteractionControllerDelegate>
 {
     NSString		*path;
     NSArray			*visibleExtensions;
+    NSArray         *imgExtensions;
     NSMutableArray	*fsList;
 }
 
