@@ -881,7 +881,7 @@
             </objects>
             <point key="canvasLocation" x="4548" y="-472"/>
         </scene>
-        <!--File View Controller-->
+        <!--Title-->
         <scene sceneID="uuQ-mt-su2">
             <objects>
                 <viewController storyboardIdentifier="FileView" id="0p8-Wg-etN" customClass="FileViewController" sceneMemberID="viewController">
@@ -889,19 +889,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2pk-Y8-XwZ">
-                                <rect key="frame" x="94" y="74" width="115" height="30"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gQd-2N-TLj">
+                                <rect key="frame" x="23" y="81" width="281" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Open In...">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="openIn:" destination="0p8-Wg-etN" eventType="touchUpInside" id="BaK-vd-mQG"/>
-                                </connections>
-                            </button>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Title" id="wGE-SN-ZLL">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="LPc-Pu-2ZY" userLabel="Item">
+                            <connections>
+                                <action selector="didAction:" destination="0p8-Wg-etN" id="AB6-b9-LPO"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="lblTitle" destination="gQd-2N-TLj" id="Vyf-yL-2tl"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pBe-RI-sMi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

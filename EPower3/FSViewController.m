@@ -126,10 +126,10 @@
                      File *aFile = [fsList objectAtIndex:selectedIndexPath.row];
                      
                      BOOL isImage = FALSE;
-                     NSString* strExt = [aFile.path pathExtension];
+                     NSString* strExt = [[aFile.name pathExtension] uppercaseString];
                      for(NSString* ext in imgExtensions)
                      {
-                         if([ext isEqualToString:strExt])
+                         if([[ext uppercaseString] isEqualToString:strExt])
                          {
                              isImage = TRUE;
                              break;

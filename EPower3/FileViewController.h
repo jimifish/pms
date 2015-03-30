@@ -11,10 +11,12 @@
 #import "File.h"
 
 @interface FileViewController : UIViewController
-- (IBAction)openIn:(id)sender;
+//- (IBAction)openIn:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *lblTitle;
 
 @property (nonatomic) NSInteger		ticketId;
 @property (strong, nonatomic) Device* device;
 @property (strong, nonatomic) File* file;
+- (IBAction)didAction:(id)sender;
 
 @end
