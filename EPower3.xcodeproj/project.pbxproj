@@ -24,6 +24,9 @@
 		BF3DCB83184EDA3A00F8B21B /* ThumbnailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF3DCB82184EDA3A00F8B21B /* ThumbnailViewController.m */; };
 		BF3DCB86184EE53900F8B21B /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF3DCB85184EE53900F8B21B /* ImageViewController.m */; };
 		BF4AD5101AC83D5900CE137F /* libPods-AFNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4AD50F1AC83D5900CE137F /* libPods-AFNetworking.a */; };
+		BF4AD5121AC8463300CE137F /* libPods-TTOpenInAppActivity.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4AD5111AC8463300CE137F /* libPods-TTOpenInAppActivity.a */; };
+		BF4AD5151AC8CD6C00CE137F /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4AD5141AC8CD6C00CE137F /* FileViewController.m */; };
+		BF4AD5171AC8D01C00CE137F /* empty.pdf in Resources */ = {isa = PBXBuildFile; fileRef = BF4AD5161AC8D01C00CE137F /* empty.pdf */; };
 		BF60FC45180F6B3C00E8C03E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF60FC44180F6B3C00E8C03E /* Foundation.framework */; };
 		BF60FC47180F6B3C00E8C03E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF60FC46180F6B3C00E8C03E /* CoreGraphics.framework */; };
 		BF60FC49180F6B3C00E8C03E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF60FC48180F6B3C00E8C03E /* UIKit.framework */; };
@@ -48,6 +51,7 @@
 		BF888EF4182A39E00095B77A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF888EF3182A39E00095B77A /* Security.framework */; };
 		BF947F4A1842DF01003F308B /* DeviceDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF947F491842DF01003F308B /* DeviceDetailViewController.m */; };
 		BF947F51184380FA003F308B /* Images-3.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF947F50184380FA003F308B /* Images-3.xcassets */; };
+		CD3ED909C53446480AEE386A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3CDA6B9F162F682B34F863F /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +86,10 @@
 		BF48F2251ABD4C5900AECEC6 /* Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Private.h; sourceTree = "<group>"; };
 		BF4AD50D1AC8358100CE137F /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/../build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		BF4AD50F1AC83D5900CE137F /* libPods-AFNetworking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-AFNetworking.a"; path = "Pods/../build/Debug-iphoneos/libPods-AFNetworking.a"; sourceTree = "<group>"; };
+		BF4AD5111AC8463300CE137F /* libPods-TTOpenInAppActivity.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-TTOpenInAppActivity.a"; path = "Pods/../build/Debug-iphoneos/libPods-TTOpenInAppActivity.a"; sourceTree = "<group>"; };
+		BF4AD5131AC8CD6C00CE137F /* FileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileViewController.h; sourceTree = "<group>"; };
+		BF4AD5141AC8CD6C00CE137F /* FileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileViewController.m; sourceTree = "<group>"; };
+		BF4AD5161AC8D01C00CE137F /* empty.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = empty.pdf; path = Files/empty.pdf; sourceTree = "<group>"; };
 		BF60FC41180F6B3C00E8C03E /* PowerMIS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PowerMIS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF60FC44180F6B3C00E8C03E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BF60FC46180F6B3C00E8C03E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -126,6 +134,7 @@
 		BF947F491842DF01003F308B /* DeviceDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceDetailViewController.m; sourceTree = "<group>"; };
 		BF947F50184380FA003F308B /* Images-3.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Images-3.xcassets"; sourceTree = "<group>"; };
 		BFB8C373182B871A00501395 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		F3CDA6B9F162F682B34F863F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF4AD5121AC8463300CE137F /* libPods-TTOpenInAppActivity.a in Frameworks */,
 				BF4AD5101AC83D5900CE137F /* libPods-AFNetworking.a in Frameworks */,
 				BF888EF4182A39E00095B77A /* Security.framework in Frameworks */,
 				BF888EF2182A39D60095B77A /* CFNetwork.framework in Frameworks */,
@@ -140,6 +150,7 @@
 				BF60FC47180F6B3C00E8C03E /* CoreGraphics.framework in Frameworks */,
 				BF60FC49180F6B3C00E8C03E /* UIKit.framework in Frameworks */,
 				BF60FC45180F6B3C00E8C03E /* Foundation.framework in Frameworks */,
+				CD3ED909C53446480AEE386A /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,6 +185,7 @@
 		BF60FC38180F6B3C00E8C03E = {
 			isa = PBXGroup;
 			children = (
+				BF4AD5161AC8D01C00CE137F /* empty.pdf */,
 				BF60FC4A180F6B3C00E8C03E /* EPower3 */,
 				BF60FC69180F6B3C00E8C03E /* EPower3Tests */,
 				BF60FC43180F6B3C00E8C03E /* Frameworks */,
@@ -193,6 +205,7 @@
 		BF60FC43180F6B3C00E8C03E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BF4AD5111AC8463300CE137F /* libPods-TTOpenInAppActivity.a */,
 				BF4AD50F1AC83D5900CE137F /* libPods-AFNetworking.a */,
 				BF4AD50D1AC8358100CE137F /* libPods.a */,
 				BF888EF5182A39F00095B77A /* libPods.a */,
@@ -203,6 +216,7 @@
 				BF60FC46180F6B3C00E8C03E /* CoreGraphics.framework */,
 				BF60FC48180F6B3C00E8C03E /* UIKit.framework */,
 				BF60FC63180F6B3C00E8C03E /* XCTest.framework */,
+				F3CDA6B9F162F682B34F863F /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -258,6 +272,8 @@
 				BF6702D81AC04C6100B8790E /* FSViewController.m */,
 				BF6702DA1AC0573800B8790E /* FSCell.h */,
 				BF6702DB1AC0573800B8790E /* FSCell.m */,
+				BF4AD5131AC8CD6C00CE137F /* FileViewController.h */,
+				BF4AD5141AC8CD6C00CE137F /* FileViewController.m */,
 			);
 			path = EPower3;
 			sourceTree = "<group>";
@@ -298,10 +314,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BF60FC73180F6B3C00E8C03E /* Build configuration list for PBXNativeTarget "EPower3" */;
 			buildPhases = (
+				99BF7474C28BAA098C7421FF /* Check Pods Manifest.lock */,
 				BF60FC3D180F6B3C00E8C03E /* Sources */,
 				BF60FC3E180F6B3C00E8C03E /* Frameworks */,
 				BF60FC3F180F6B3C00E8C03E /* Resources */,
 				BF6702EA1AC18CAF00B8790E /* ShellScript */,
+				7B52E985694B2BBA16358E65 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -349,6 +367,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF4AD5171AC8D01C00CE137F /* empty.pdf in Resources */,
 				BF026D0118364ADE00B89BEB /* Circle_Red_16x16.png in Resources */,
 				BF947F51184380FA003F308B /* Images-3.xcassets in Resources */,
 				BF0E57EB185E0B770030535B /* Desktop_144x80.png in Resources */,
@@ -367,6 +386,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		7B52E985694B2BBA16358E65 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		99BF7474C28BAA098C7421FF /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		BF6702EA1AC18CAF00B8790E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -405,6 +454,7 @@
 				BF6702DC1AC0573800B8790E /* FSCell.m in Sources */,
 				BF60FC86180FB15500E8C03E /* PlayerCell.m in Sources */,
 				BF60FC80180F71BC00E8C03E /* Player.m in Sources */,
+				BF4AD5151AC8CD6C00CE137F /* FileViewController.m in Sources */,
 				BF888EEE182A38510095B77A /* TestViewController.m in Sources */,
 				BF60FC89180FC6B500E8C03E /* PlayerDetailsViewController.m in Sources */,
 				BF026CEE1833663C00B89BEB /* DevicesViewController.m in Sources */,

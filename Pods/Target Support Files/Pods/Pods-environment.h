@@ -60,3 +60,9 @@
 #define COCOAPODS_VERSION_MINOR_SBJson 0
 #define COCOAPODS_VERSION_PATCH_SBJson 1
 
+// TTOpenInAppActivity
+#define COCOAPODS_POD_AVAILABLE_TTOpenInAppActivity
+#define COCOAPODS_VERSION_MAJOR_TTOpenInAppActivity 1
+#define COCOAPODS_VERSION_MINOR_TTOpenInAppActivity 0
+#define COCOAPODS_VERSION_PATCH_TTOpenInAppActivity 0
+

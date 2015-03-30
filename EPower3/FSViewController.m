@@ -15,10 +15,13 @@
 #import "Private.h"
 #import "File.h"
 #import "FSCell.h"
+#import "TTOpenInAppActivity.h"
+#import "FileViewController.h"
 
 
 @interface FSViewController ()
 @property (nonatomic, strong) UIDocumentInteractionController *controller;
+@property (nonatomic, strong) UIPopoverController *activityPopoverController;
 @end
 
 @implementation FSViewController
@@ -147,46 +150,76 @@
                      {
                          NSLog(@"Not image");
                          
-                         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-                         AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-                         manager.securityPolicy.allowInvalidCertificates = YES;
+                         FileViewController* fvc = [self.navigationController.storyboard instantiateViewControllerWithIdentifier:ID_PAGE_FILE_VIEW];
                          
-                         NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FILE, (long)self.ticketId];
+                         [self.navigationController pushViewController:fvc animated:YES];
+                         fvc.device = self.device;
+                         fvc.file = aFile;
+                         fvc.ticketId = ticketId;
 
-                         strURL = [Helper EncodeURI:strURL];
-                         NSLog(@"%@", strURL);
-                         NSURL *URL = [NSURL URLWithString:strURL];
-                         NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-                         @try {
-                             NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-                                 NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
-                                 return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
-                             } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-                                 NSLog(@"File downloaded to: %@", filePath);
-                                 
-                                 NSString* downloadFilePath = [NSString stringWithFormat:@"Documents/%@.%@", aFile.name, strExt];
-                                 
-                                 NSString *fPath=[NSHomeDirectory() stringByAppendingPathComponent:downloadFilePath];
-                                 
-                                 NSURL *fileURL = [[NSURL alloc] initWithString:[[NSString alloc] initWithFormat:@"file://%@",fPath]];
+                         
+//                         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+//                         AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+//                         manager.securityPolicy.allowInvalidCertificates = YES;
+//                         
+//                         NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FILE, (long)self.ticketId];
+//
+//                         strURL = [Helper EncodeURI:strURL];
+//                         NSLog(@"%@", strURL);
+//                         NSURL *URL = [NSURL URLWithString:strURL];
+//                         NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+//                         @try {
+//                             NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+//                                 NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
+//                                 return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
+//                             } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+//                                 NSLog(@"File downloaded to: %@", filePath);
 //                                 
-//                                 self.controller.URL = fileURL;
+//                                 NSString* downloadFilePath = [NSString stringWithFormat:@"Documents/%@.%@", aFile.name, strExt];
+//                                 
+//                                 NSString *fPath=[NSHomeDirectory() stringByAppendingPathComponent:downloadFilePath];
+//                                 //NSString* fPath2 = [[NSString alloc] initWithFormat:@"file://%@",fPath];
+//                                 //NSURL *fileURL = [NSURL fileURLWithPath:fPath2];
+//                                 NSURL *fileURL = [[NSURL alloc] initWithString:[[NSString alloc] initWithFormat:@"file://%@",fPath]];
+////                                 
+////                                 self.controller.URL = fileURL;
+////                                 [self.controller presentOptionsMenuFromRect:(CGRectZero) inView:self.view animated:YES];
+//                                 
+//                                 self.controller = [UIDocumentInteractionController interactionControllerWithURL:fileURL];
+//                                 // Present the app picker display
 //                                 [self.controller presentOptionsMenuFromRect:(CGRectZero) inView:self.view animated:YES];
-                                 
-                                 self.controller = [UIDocumentInteractionController interactionControllerWithURL:fileURL];
-                                 // Present the app picker display
-                                 [self.controller presentOptionsMenuFromRect:(CGRectZero) inView:self.view animated:YES];
-                                 
-                                 //TTOpenInAppActivity
-                             }];
-                             [downloadTask resume];
-                         }
-                         @catch (NSException *exception) {
-                             NSLog(@"%@", exception.description);
-                         }
-                         @finally{
-                             [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
-                         }
+//                                 
+////                                 NSString *filePath2 = [[NSBundle mainBundle] pathForResource:@"empty" ofType:@"pdf"];
+////                                 NSURL *URL = [NSURL fileURLWithPath:filePath2];
+//
+////                                    NSString* downloadFilePath = [NSString stringWithFormat:@"Documents/%@.%@", aFile.name, strExt];
+////                                    NSString *fPath=[NSHomeDirectory() stringByAppendingPathComponent:downloadFilePath];
+////                                    NSURL *fileURL = [[NSURL alloc] initWithString:[[NSString alloc] initWithFormat:@"file://%@",fPath]];
+////                                 TTOpenInAppActivity *openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.view andRect:(CGRectZero)];
+////                                 UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[fileURL] applicationActivities:@[openInAppActivity]];
+////                                 
+////                                 if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+////                                     // Store reference to superview (UIActionSheet) to allow dismissal
+////                                     openInAppActivity.superViewController = activityViewController;
+////                                     // Show UIActivityViewController
+////                                     [self presentViewController:activityViewController animated:YES completion:NULL];
+////                                 } else {
+////                                     // Create pop up
+////                                     self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
+////                                     // Store reference to superview (UIPopoverController) to allow dismissal
+////                                     openInAppActivity.superViewController = self.activityPopoverController;
+////                                     // Show UIActivityViewController in popup
+////                                     [self.activityPopoverController presentPopoverFromRect:(CGRectZero) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+////                                 }
+//                             }];
+//                             [downloadTask resume];
+//                         }
+//                         @catch (NSException *exception) {
+//                             NSLog(@"%@", exception.description);
+//                         }
+//                         @finally{
+//                             [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+//                         }
                      }
                  }
              }

@@ -47,6 +47,7 @@
 #define ID_PAGE_THUMBNAIL_LIST  @"ThumbnailList"
 #define ID_PAGE_IMAGE_VIEW  @"ImageView"
 #define ID_PAGE_FS_LIST @"FSList"
+#define ID_PAGE_FILE_VIEW  @"FileView"
 
 #define DEVICE_ORDER_BY_JOIN_TIME 0
 #define DEVICE_ORDER_BY_UPDATE_TIME 1

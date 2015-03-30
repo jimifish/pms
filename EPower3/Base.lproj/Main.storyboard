@@ -860,7 +860,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Y0E-Tp-3lD">
-                                            <rect key="frame" x="28" y="-1" width="417" height="59"/>
+                                            <rect key="frame" x="28" y="-1" width="737" height="88.5"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
                                     </subviews>
@@ -880,6 +880,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xq4-lt-6Lr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4548" y="-472"/>
+        </scene>
+        <!--File View Controller-->
+        <scene sceneID="uuQ-mt-su2">
+            <objects>
+                <viewController storyboardIdentifier="FileView" id="0p8-Wg-etN" customClass="FileViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Sui-0p-1Ep">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2pk-Y8-XwZ">
+                                <rect key="frame" x="94" y="74" width="115" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Open In...">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="openIn:" destination="0p8-Wg-etN" eventType="touchUpInside" id="BaK-vd-mQG"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pBe-RI-sMi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4946" y="-455"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xW0-Ri-kLo">

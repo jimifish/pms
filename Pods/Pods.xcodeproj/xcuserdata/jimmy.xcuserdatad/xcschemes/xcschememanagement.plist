@@ -19,6 +19,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-TTOpenInAppActivity.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -27,22 +32,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0CC68D606463A63C1CD037E6</key>
+		<key>3FF8A75B0D82B665B19CE99E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3B4F649B0ACE3BBBDC66C303</key>
+		<key>40A1685E8794EFF06B2D4646</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>71932E385502E94312B15BC1</key>
+		<key>8B29B8C0132EF4D989890D3F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C5D6779116BF85B0E06D8544</key>
+		<key>A481A4AF36726734CD899BAC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E654F52B9822793D6B9A0041</key>
 		<dict>
 			<key>primary</key>
 			<true/>
