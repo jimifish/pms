@@ -291,7 +291,18 @@
     if(aFile.type == 2)
     {
         @try {
-            NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_REQ_FILE, ticketId, aFile.path];
+            NSString* strURL = @"";
+            
+            BOOL isImage = [self isImage:aFile.name];
+            if(isImage)
+            {
+                strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@|720|720", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_REQ_FILE, ticketId, aFile.path];
+            }
+            else
+            {
+                strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_REQ_FILE, ticketId, aFile.path];
+            }
+            
             strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             NSLog(@"%@", strURL);
             [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
