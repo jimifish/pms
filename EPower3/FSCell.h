@@ -10,4 +10,6 @@
 
 @interface FSCell : UITableViewCell
 
+@property (nonatomic) NSInteger		ticketId;
+@property (nonatomic,retain) NSString		*fileName;
 @end

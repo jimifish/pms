@@ -10,6 +10,8 @@
 
 @implementation FSCell
 
+@synthesize ticketId;
+
 - (void)awakeFromNib {
     // Initialization code
 }

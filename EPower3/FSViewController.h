@@ -20,6 +20,7 @@
     NSMutableArray	*fsList;
 }
 
+@property (nonatomic, strong) NSMutableDictionary* thumbImg;
 @property (nonatomic) NSInteger		ticketId;
 @property (nonatomic,retain) NSString		*path;
 @property (nonatomic,retain) NSArray		*visibleExtensions;

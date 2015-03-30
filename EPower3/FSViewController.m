@@ -14,7 +14,7 @@
 #import "Helper.h"
 #import "Private.h"
 #import "File.h"
-#import "FSCell.h"
+//#import "FSCell.h"
 #import "TTOpenInAppActivity.h"
 #import "FileViewController.h"
 
@@ -28,46 +28,14 @@
 
 @synthesize path,visibleExtensions,fsList;
 @synthesize m_progressAlert;
+@synthesize thumbImg;
 
 #pragma mark - DeviceImageViewControllerDelegate
 
 -(void)ImageViewControllerDidBack:(NSString *)fileName
 {
     NSLog(@"%@", fileName);
-//    NSInteger idx = 0;
-//    for (NSString *key in [dictThumb allKeysForObject:fileName]) {
-//        NSLog(@"Key: %@", key);
-//        idx = [key intValue];
-//    }
-//    
-//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:idx - 1 inSection:0];
-//    [tblThumbnail scrollToRowAtIndexPath:indexPath
-//                        atScrollPosition:UITableViewScrollPositionTop
-//                                animated:YES];
 }
-
-//- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-//{
-//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-//    if (self) {
-//        // Custom initialization
-//        self.title = @"File Browser";
-//        visibleExtensions = [NSArray arrayWithObjects:@"txt", @"htm", @"html", @"pdb", @"pdf", @"jpg", @"png", @"gif", nil];
-//        fsList = [[NSMutableArray alloc] init];
-//    }
-//    return self;
-//}
-
-//- (id)init
-//{
-//    if (self = [super initWithStyle:UITableViewStyleGrouped])
-//    {
-//        //self.title = self.viewTitle;
-//        visibleExtensions = [NSArray arrayWithObjects:@"txt", @"htm", @"html", @"pdb", @"pdf", @"jpg", @"png", @"gif", nil];
-//        fsList = [[NSMutableArray alloc] init];
-//    }
-//    return self;
-//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -82,13 +50,6 @@
     return self;
 }
 
-//- (void)setPath:(NSString*)newPath
-//{
-//    path = newPath;
-//    self.title = [path lastPathComponent];
-//    [self reloadFiles];
-//}
-
 -(void)setViewTitle:(NSString *)viewTitle
 {
     self.title = viewTitle;
@@ -96,12 +57,27 @@
 
 -(void)setTicketId:(NSInteger)ticketId
 {
-    [self queryFS:ticketId bFilesys:TRUE];
+    [self queryFS:ticketId queryType:1 rowIndex:0];
 }
 
--(void)queryFS:(NSInteger)ticketId bFilesys:(BOOL)isFileSys {
+-(BOOL)isImage:(NSString*)filename
+{
+    BOOL bImage = FALSE;
     
-    //sleep(2);
+    NSString* strExt = [[filename pathExtension] uppercaseString];
+    for(NSString* ext in imgExtensions)
+    {
+        if([[ext uppercaseString] isEqualToString:strExt])
+        {
+            bImage = TRUE;
+            break;
+        }
+    }
+    
+    return  bImage;
+}
+
+-(void)queryFS:(NSInteger)ticketId queryType:(NSInteger)type rowIndex:(NSInteger)rowIndex {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.securityPolicy.allowInvalidCertificates = YES;
     NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_QUERY_FS, (long)ticketId];
@@ -116,25 +92,16 @@
              NSLog(@"queryFS return code: %@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
              if(nRet == RET_SUCCESS)
              {
-                 if(isFileSys)
+                 if(type == 1)
                  {
                      [self getFS:ticketId];
                  }
-                 else
+                 else if(type == 2)
                  {
                      NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
                      File *aFile = [fsList objectAtIndex:selectedIndexPath.row];
                      
-                     BOOL isImage = FALSE;
-                     NSString* strExt = [[aFile.name pathExtension] uppercaseString];
-                     for(NSString* ext in imgExtensions)
-                     {
-                         if([[ext uppercaseString] isEqualToString:strExt])
-                         {
-                             isImage = TRUE;
-                             break;
-                         }
-                     }
+                     BOOL isImage = [self isImage:aFile.name];
                      
                      if(isImage)
                      {
@@ -156,76 +123,16 @@
                          fvc.device = self.device;
                          fvc.file = aFile;
                          fvc.ticketId = ticketId;
-
-                         
-//                         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-//                         AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-//                         manager.securityPolicy.allowInvalidCertificates = YES;
-//                         
-//                         NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FILE, (long)self.ticketId];
-//
-//                         strURL = [Helper EncodeURI:strURL];
-//                         NSLog(@"%@", strURL);
-//                         NSURL *URL = [NSURL URLWithString:strURL];
-//                         NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-//                         @try {
-//                             NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-//                                 NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
-//                                 return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
-//                             } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-//                                 NSLog(@"File downloaded to: %@", filePath);
-//                                 
-//                                 NSString* downloadFilePath = [NSString stringWithFormat:@"Documents/%@.%@", aFile.name, strExt];
-//                                 
-//                                 NSString *fPath=[NSHomeDirectory() stringByAppendingPathComponent:downloadFilePath];
-//                                 //NSString* fPath2 = [[NSString alloc] initWithFormat:@"file://%@",fPath];
-//                                 //NSURL *fileURL = [NSURL fileURLWithPath:fPath2];
-//                                 NSURL *fileURL = [[NSURL alloc] initWithString:[[NSString alloc] initWithFormat:@"file://%@",fPath]];
-////                                 
-////                                 self.controller.URL = fileURL;
-////                                 [self.controller presentOptionsMenuFromRect:(CGRectZero) inView:self.view animated:YES];
-//                                 
-//                                 self.controller = [UIDocumentInteractionController interactionControllerWithURL:fileURL];
-//                                 // Present the app picker display
-//                                 [self.controller presentOptionsMenuFromRect:(CGRectZero) inView:self.view animated:YES];
-//                                 
-////                                 NSString *filePath2 = [[NSBundle mainBundle] pathForResource:@"empty" ofType:@"pdf"];
-////                                 NSURL *URL = [NSURL fileURLWithPath:filePath2];
-//
-////                                    NSString* downloadFilePath = [NSString stringWithFormat:@"Documents/%@.%@", aFile.name, strExt];
-////                                    NSString *fPath=[NSHomeDirectory() stringByAppendingPathComponent:downloadFilePath];
-////                                    NSURL *fileURL = [[NSURL alloc] initWithString:[[NSString alloc] initWithFormat:@"file://%@",fPath]];
-////                                 TTOpenInAppActivity *openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.view andRect:(CGRectZero)];
-////                                 UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[fileURL] applicationActivities:@[openInAppActivity]];
-////                                 
-////                                 if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-////                                     // Store reference to superview (UIActionSheet) to allow dismissal
-////                                     openInAppActivity.superViewController = activityViewController;
-////                                     // Show UIActivityViewController
-////                                     [self presentViewController:activityViewController animated:YES completion:NULL];
-////                                 } else {
-////                                     // Create pop up
-////                                     self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-////                                     // Store reference to superview (UIPopoverController) to allow dismissal
-////                                     openInAppActivity.superViewController = self.activityPopoverController;
-////                                     // Show UIActivityViewController in popup
-////                                     [self.activityPopoverController presentPopoverFromRect:(CGRectZero) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-////                                 }
-//                             }];
-//                             [downloadTask resume];
-//                         }
-//                         @catch (NSException *exception) {
-//                             NSLog(@"%@", exception.description);
-//                         }
-//                         @finally{
-//                             [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
-//                         }
                      }
+                 }
+                 else if(type == 3)
+                 {
+                     //[self getThumbnail:ticketId rowIndex:rowIndex];
                  }
              }
              else
              {
-                 [self queryFS:ticketId bFilesys:isFileSys];
+                 [self queryFS:ticketId  queryType:type rowIndex:rowIndex];
              }
          }
          @catch (NSException *exception) {
@@ -246,6 +153,46 @@
     }
     return _controller;
 }
+
+//-(void)getThumbnail:(NSInteger)ticketId rowIndex:(NSUInteger)rowIndex{
+//    
+//    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+//    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+//    manager.securityPolicy.allowInvalidCertificates = YES;
+//    
+//    NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FILE, (long)self.ticketId];
+//    
+//    strURL = [Helper EncodeURI:strURL];
+//    NSLog(@"%@", strURL);
+//    NSURL *URL = [NSURL URLWithString:strURL];
+//    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+//    @try {
+//        NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+//            NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
+//            return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
+//        } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+//            NSLog(@"File downloaded to: %@", filePath);
+//            
+//            static NSString *CellIdentifier = @"FSCell";
+//            NSIndexPath* indexPath = [NSIndexPath indexPathWithIndex:rowIndex];
+//            //FSCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+//            FSCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
+//            if(cell != nil)
+//            {
+//                [thumbImg setObject:filePath forKey:cell.fileName];
+//                cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+//                [cell setNeedsLayout];
+//            }
+//        }];
+//        [downloadTask resume];
+//    }
+//    @catch (NSException *exception) {
+//        NSLog(@"%@", exception.description);
+//    }
+//    @finally{
+//        [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+//    }
+//}
 
 -(BOOL)getFS:(NSInteger)ticketId {
     __block BOOL bSuccess = FALSE;
@@ -291,42 +238,6 @@
     return bSuccess;
 }
 
-//- (void)reloadFiles
-//{
-//    NSFileManager * fileManager = [NSFileManager defaultManager];
-//    NSArray * fileArray = [fileManager contentsOfDirectoryAtPath:path error:nil];
-//    for(NSString *file in fileArray)
-//    {
-//        if ([file characterAtIndex:0] == (unichar)'.') // Skip invisibles, like .DS_Store
-//            continue;
-//        
-//        BOOL isDir = NO;
-//        if([fileManager fileExistsAtPath:[path stringByAppendingPathComponent:file] isDirectory:&isDir])
-//        {
-//            File *aFile;
-//            if(isDir)
-//            {
-//                aFile = [[File alloc] init];
-//                aFile.name = file;
-//                aFile.isDirectory = isDir;
-//                [fsList addObject:aFile];
-//            }
-//            else
-//            {
-//                NSAssert(visibleExtensions,@"Please set visibleExtensions before setPath.");
-//                NSString *extension = [[file pathExtension] lowercaseString];
-//                if ([visibleExtensions containsObject:extension])
-//                {
-//                    aFile = [[File alloc] init];
-//                    aFile.name = file;
-//                    aFile.isDirectory = isDir;
-//                    [fsList addObject:aFile];
-//                }
-//            } 
-//        }
-//    }
-//}
-
 - (void) viewWillDisappear:(BOOL) animated
 {
     [super viewWillAppear:animated];
@@ -342,6 +253,8 @@
     indicator.center = CGPointMake(m_progressAlert.bounds.size.width / 2, m_progressAlert.bounds.size.height / 2 + 10);
     [indicator startAnimating];
     [m_progressAlert addSubview:indicator];
+    
+    thumbImg = [[NSMutableDictionary alloc]init];
 }
 
 -(void)showProgress{
@@ -389,7 +302,7 @@
                      NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
                      if(nRet == RET_SUCCESS)
                      {
-                         [self queryFS:ticketId bFilesys:FALSE];
+                         [self queryFS:ticketId queryType:2 rowIndex:0];
                      }
                      else
                      {
@@ -461,18 +374,111 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     // Configure the cell...
-    static NSString *CellIdentifier = @"FSCell";
-    FSCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    static NSString *CellIdentifier = @"Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
     if (cell == nil)
     {
-        cell = [[FSCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     File *aFile = [fsList objectAtIndex:[indexPath row]];
     cell.textLabel.text = aFile.name;
+    [cell.imageView setFrame:CGRectMake(0, 0, 24, 24)];
     if(aFile.type != 2)
         cell.imageView.image = [File folderImage];
     else
+    {
         cell.imageView.image = [File fileImage];
+        BOOL isImage = [self isImage:aFile.name];
+        
+        if(isImage)
+        {
+            NSURL* filePath = [thumbImg objectForKey:aFile.name];
+            
+            if(nil != filePath)
+            {
+                cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+            }
+            else
+            {
+                int ticketId = arc4random_uniform(9999999);
+                //cell.ticketId = ticketId;
+                AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+                manager.securityPolicy.allowInvalidCertificates = YES;
+                @try
+                {
+                    NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@|24|24", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_REQ_FILE, ticketId, aFile.path];
+                    strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    NSLog(@"%@", strURL);
+                    [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+                     {
+                         @try
+                         {
+                             NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
+                             NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
+                             if(nRet == RET_SUCCESS)
+                             {
+                                 NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+                                 AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+                                 manager.securityPolicy.allowInvalidCertificates = YES;
+                                 
+                                 NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLIENT_REQ_GET_IMAGE, (long)ticketId];
+                                 
+                                 strURL = [Helper EncodeURI:strURL];
+                                 NSLog(@"%@", strURL);
+                                 NSURL *URL = [NSURL URLWithString:strURL];
+                                 NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+                                 @try {
+                                     NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+                                         NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
+                                         return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
+                                     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+                                         NSLog(@"File downloaded to: %@", filePath);
+                                         if(cell != nil)
+                                         {
+                                             [thumbImg setObject:filePath forKey:aFile.name];
+                                             UIImage *placeholder = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+                                             [cell.imageView setImage:placeholder];
+                                             //[cell.imageView setImageWithURL:[NSURL URLWithString:filePath]];
+                                             //cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+                                             NSLog(@"Set imgage: %@", aFile.name);
+                                             //[cell.imageView setNeedsDisplay];
+                                         }
+                                     }];
+                                     [downloadTask resume];
+                                 }
+                                 @catch (NSException *exception) {
+                                     NSLog(@"SRV_CLIENT_REQ_GET_IMAGE exception: %@", exception.description);
+                                 }
+                                 @finally{
+                                     //[m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+                                 }
+                             }
+                             else
+                             {
+                                 NSLog(@"failed");
+                             }
+                         }
+                         @catch (NSException *exception) {
+                             NSLog(@"%@", [exception description]);
+                         }
+                         @finally
+                         {
+                             [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+                         }
+                         
+                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                         NSLog(@"Error: %@", error);
+                         NSLog(@"%@", operation.responseString);
+                     }];
+                }
+                @catch (NSException *exception)
+                {
+                    NSLog(@"%@", exception.description);
+                }
+            }
+        }
+    }
     
     return cell;
 }
