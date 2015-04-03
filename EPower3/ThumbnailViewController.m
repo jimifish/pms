@@ -13,6 +13,7 @@
 #import "ImageViewController.h"
 #import "Helper.h"
 #import "Private.h"
+#import "MBProgressHUD.h"
 
 @interface ThumbnailViewController ()
 
@@ -154,6 +155,10 @@
     //set the title while refreshing
     //refreshControl.attributedTitle = [[NSAttributedString alloc]initWithString:@"Refreshing the device list"];
     
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeCustomView;
+    hud.labelText = @"Loading";
+    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.securityPolicy.allowInvalidCertificates = YES;
     NSString* strURL = [NSString stringWithFormat:@"%@%d&ComputerName=%@&FolderName=%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_THUMB_LIST, self.device.computerName, folderName];
@@ -188,10 +193,14 @@
          @catch (NSException *exception) {
              NSLog(@"%@", [exception description]);
          }
+         @finally
+         {
+             [self getAllThumbnils];
+         }
          
          //NSLog(@"thumbnail count: %d", [thumbList count]);
          
-         [self.tableView reloadData];
+         //[self.tableView reloadData];
          
      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
          NSLog(@"Error: %@", error);
@@ -204,6 +213,51 @@
     //    NSString *lastupdated = [NSString stringWithFormat:@"Last Updated on %@",[formattedDate stringFromDate:[NSDate date]]];
     //    refreshControl	.attributedTitle = [[NSAttributedString alloc]initWithString:lastupdated];
     //    //end the refreshing
+    [refreshControl endRefreshing];
+}
+
+-(void)getAllThumbnils
+{
+    NSLog(@"getAllThumbnils");
+    for (NSString* key in dictThumb) {
+        NSString* fileName = [dictThumb objectForKey:key];
+        
+        NSURL* filePath = [thumbImg objectForKey:fileName];
+        if(nil != filePath)
+        {
+            NSLog(@"Get thumbnail from cache.");
+            continue;
+        }
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+        manager.securityPolicy.allowInvalidCertificates = YES;
+        NSString* strURL = [NSString stringWithFormat:@"%@%d&ComputerName=%@&FolderName=%@&FileName=%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_THUMB, self.device.computerName, folderName, fileName];
+        strURL = [Helper EncodeURI:strURL];
+        NSLog(@"%@", strURL);
+        
+        NSURL* URL = [NSURL URLWithString:strURL];
+        NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+        
+        @try {
+            NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+                NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
+                return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
+            } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+                NSLog(@"File downloaded to: %@", filePath);
+                //cell.imageView.frame = CGRectMake(0,0,72,40);
+                [thumbImg setObject:filePath forKey:fileName];
+            }];
+            [downloadTask resume];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"%@", exception.description);
+        }
+    }
+    
+    [self.tableView reloadData];
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [refreshControl endRefreshing];
 }
 
@@ -297,31 +351,6 @@
     else
     {
         cell.imageView.image = [UIImage imageNamed:@"Desktop_144x80.png"];
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-        manager.securityPolicy.allowInvalidCertificates = YES;
-        NSString* strURL = [NSString stringWithFormat:@"%@%d&ComputerName=%@&FolderName=%@&FileName=%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_THUMB, self.device.computerName, folderName, fileName];
-        strURL = [Helper EncodeURI:strURL];
-        NSLog(@"%@", strURL);
-        
-        NSURL* URL = [NSURL URLWithString:strURL];
-        NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-        
-        @try {
-            NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-                NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
-                return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
-            } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-                NSLog(@"File downloaded to: %@", filePath);
-                //cell.imageView.frame = CGRectMake(0,0,72,40);
-                [thumbImg setObject:filePath forKey:fileName];
-                cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
-            }];
-            [downloadTask resume];
-        }
-        @catch (NSException *exception) {
-            NSLog(@"%@", exception.description);
-        }
     }
     
     return cell;
