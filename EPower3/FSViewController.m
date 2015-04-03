@@ -296,7 +296,7 @@
             BOOL isImage = [self isImage:aFile.name];
             if(isImage)
             {
-                strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@|720|720", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_REQ_FILE, ticketId, aFile.path];
+                strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@|240|240", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_REQ_FILE, ticketId, aFile.path];
             }
             else
             {
@@ -400,95 +400,133 @@
     else
     {
         cell.imageView.image = [File fileImage];
-        BOOL isImage = [self isImage:aFile.name];
-        
-        if(isImage)
-        {
-            NSURL* filePath = [thumbImg objectForKey:aFile.name];
-            
-            if(nil != filePath)
-            {
-                cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
-            }
-            else
-            {
-                int ticketId = arc4random_uniform(9999999);
-                //cell.ticketId = ticketId;
-                AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-                manager.securityPolicy.allowInvalidCertificates = YES;
-                @try
-                {
-                    NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@|24|24", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_REQ_FILE, ticketId, aFile.path];
-                    strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                    NSLog(@"%@", strURL);
-                    [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
-                     {
-                         @try
-                         {
-                             NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
-                             NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
-                             if(nRet == RET_SUCCESS)
-                             {
-                                 NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-                                 AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-                                 manager.securityPolicy.allowInvalidCertificates = YES;
-                                 
-                                 NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLIENT_REQ_GET_IMAGE, (long)ticketId];
-                                 
-                                 strURL = [Helper EncodeURI:strURL];
-                                 NSLog(@"%@", strURL);
-                                 NSURL *URL = [NSURL URLWithString:strURL];
-                                 NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-                                 @try {
-                                     NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-                                         NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
-                                         return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
-                                     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-                                         NSLog(@"File downloaded to: %@", filePath);
-                                         if(cell != nil)
-                                         {
-                                             [thumbImg setObject:filePath forKey:aFile.name];
-                                             UIImage *placeholder = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
-                                             [cell.imageView setImage:placeholder];
-                                             //[cell.imageView setImageWithURL:[NSURL URLWithString:filePath]];
-                                             //cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
-                                             NSLog(@"Set imgage: %@", aFile.name);
-                                             //[cell.imageView setNeedsDisplay];
-                                         }
-                                     }];
-                                     [downloadTask resume];
-                                 }
-                                 @catch (NSException *exception) {
-                                     NSLog(@"SRV_CLIENT_REQ_GET_IMAGE exception: %@", exception.description);
-                                 }
-                                 @finally{
-                                     //[m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
-                                 }
-                             }
-                             else
-                             {
-                                 NSLog(@"failed");
-                             }
-                         }
-                         @catch (NSException *exception) {
-                             NSLog(@"%@", [exception description]);
-                         }
-                         @finally
-                         {
-                             [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
-                         }
-                         
-                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                         NSLog(@"Error: %@", error);
-                         NSLog(@"%@", operation.responseString);
-                     }];
-                }
-                @catch (NSException *exception)
-                {
-                    NSLog(@"%@", exception.description);
-                }
-            }
-        }
+//        BOOL isImage = [self isImage:aFile.name];
+//        
+//        if(isImage)
+//        {
+//            NSURL* filePath = [thumbImg objectForKey:aFile.name];
+//            
+//            if(nil != filePath)
+//            {
+//                cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+//            }
+//            else
+//            {
+//                int ticketId = 2941382;//arc4random_uniform(9999999);
+//                //cell.ticketId = ticketId;
+//                
+//                NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+//                AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+//                manager.securityPolicy.allowInvalidCertificates = YES;
+//                
+//                NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLIENT_REQ_GET_IMAGE, (long)ticketId];
+//                
+//                strURL = [Helper EncodeURI:strURL];
+//                NSLog(@"%@", strURL);
+//                NSURL *URL = [NSURL URLWithString:strURL];
+//                NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+//                @try {
+//                    NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+//                        NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
+//                        return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
+//                    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+//                        NSLog(@"File downloaded to: %@", filePath);
+//                        if(cell != nil)
+//                        {
+//                            [thumbImg setObject:filePath forKey:aFile.name];
+//                            UIImage *placeholder = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+//                            [cell.imageView setImage:placeholder];
+//                            //[cell.imageView setImageWithURL:[NSURL URLWithString:filePath]];
+//                            //cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+//                            NSLog(@"Set imgage: %@", aFile.name);
+//                            //[cell.imageView setNeedsDisplay];
+//                        }
+//                    }];
+//                    [downloadTask resume];
+//                }
+//                @catch (NSException *exception) {
+//                    NSLog(@"SRV_CLIENT_REQ_GET_IMAGE exception: %@", exception.description);
+//                }
+//                @finally{
+//                    //[m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+//                }
+//                
+////                AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+////                manager.securityPolicy.allowInvalidCertificates = YES;
+////                @try
+////                {
+////                    NSString* strURL = [NSString stringWithFormat:@"%@%d&DeviceId=%@&cmd=%d&params=%d|%@|24|24", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_SEND_CMD, self.device.deviceId, SRV_CLINET_CMD_REQ_FILE, ticketId, aFile.path];
+////                    strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+////                    NSLog(@"%@", strURL);
+////                    [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+////                     {
+////                         @try
+////                         {
+////                             NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
+////                             NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
+////                             if(nRet == RET_SUCCESS)
+////                             {
+////                                 NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+////                                 AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+////                                 manager.securityPolicy.allowInvalidCertificates = YES;
+////                                 
+////                                 //NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLIENT_REQ_GET_IMAGE, (long)ticketId];
+////                                 NSString* strURL = [NSString stringWithFormat:@"%@%d&ticketId=2941382", PMS_WEBAPP_REQ_URI, SRV_CLIENT_REQ_GET_IMAGE];
+////                                 
+////                                 strURL = [Helper EncodeURI:strURL];
+////                                 NSLog(@"%@", strURL);
+////                                 NSURL *URL = [NSURL URLWithString:strURL];
+////                                 NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+////                                 @try {
+////                                     NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+////                                         NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
+////                                         return [documentsDirectoryPath URLByAppendingPathComponent:[targetPath lastPathComponent]];
+////                                     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+////                                         NSLog(@"File downloaded to: %@", filePath);
+////                                         if(cell != nil)
+////                                         {
+////                                             [thumbImg setObject:filePath forKey:aFile.name];
+////                                             UIImage *placeholder = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+////                                             [cell.imageView setImage:placeholder];
+////                                             //[cell.imageView setImageWithURL:[NSURL URLWithString:filePath]];
+////                                             //cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:filePath]];
+////                                             NSLog(@"Set imgage: %@", aFile.name);
+////                                             //[cell.imageView setNeedsDisplay];
+////                                         }
+////                                     }];
+////                                     [downloadTask resume];
+////                                 }
+////                                 @catch (NSException *exception) {
+////                                     NSLog(@"SRV_CLIENT_REQ_GET_IMAGE exception: %@", exception.description);
+////                                 }
+////                                 @finally{
+////                                     //[m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+////                                 }
+////                             }
+////                             else
+////                             {
+////                                 NSLog(@"failed");
+////                             }
+////                         }
+////                         @catch (NSException *exception) {
+////                             NSLog(@"%@", [exception description]);
+////                         }
+////                         @finally
+////                         {
+////                             [m_progressAlert dismissWithClickedButtonIndex:0 animated:YES];
+////                         }
+////                         
+////                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+////                         NSLog(@"Error: %@", error);
+////                         NSLog(@"%@", operation.responseString);
+////                     }];
+////                }
+////                @catch (NSException *exception)
+////                {
+////                    NSLog(@"%@", exception.description);
+////                }
+//            }
+//        }
     }
     
     return cell;

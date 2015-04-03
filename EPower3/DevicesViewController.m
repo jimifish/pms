@@ -9,7 +9,7 @@
 #import "DevicesViewController.h"
 #import "Device.h"
 #import "AFNetworking.h"
-//#import "MBProgressHUD.h"
+#import "MBProgressHUD.h"
 #import "Constants.h"
 //#import "SBJson.h"
 #import "DeviceCell.h"
@@ -25,6 +25,7 @@
 
 @synthesize deviceList;
 @synthesize refreshControl;
+@synthesize timer;
 
 -(UIImage*) imageForHealthy: (Device*) device
 {
@@ -93,6 +94,10 @@
     //set the title while refreshing
     //refreshControl.attributedTitle = [[NSAttributedString alloc]initWithString:@"Refreshing the device list"];
     
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeCustomView;
+    hud.labelText = @"Loading";
+    
     NSUserDefaults* userDefault = [NSUserDefaults standardUserDefaults];
     NSString* strDeviceOrder = [userDefault stringForKey:KEY_DEVICD_ORDER];
     if(NULL == strDeviceOrder)
@@ -141,6 +146,11 @@
         @catch (NSException *exception) {
             NSLog(@"%@", [exception description]);
         }
+         @finally
+         {
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+             [refreshControl endRefreshing];
+         }
          
          NSLog(@"Device count: %lu", (unsigned long)[deviceList count]);
          
@@ -150,14 +160,8 @@
         NSLog(@"Error: %@", error);
         NSLog(@"%@", operation.responseString);
     }];
-    
-    //set the date and time of refreshing
-//    NSDateFormatter *formattedDate = [[NSDateFormatter alloc]init];
-//    [formattedDate setDateFormat:@"MMM d, h:mm a"];
-//    NSString *lastupdated = [NSString stringWithFormat:@"Last Updated on %@",[formattedDate stringFromDate:[NSDate date]]];
-//    refreshControl	.attributedTitle = [[NSAttributedString alloc]initWithString:lastupdated];
 //    //end the refreshing
-    [refreshControl endRefreshing];
+    //[refreshControl endRefreshing];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -180,15 +184,29 @@
     [self.refreshControl addTarget:self action:@selector(refreshDevices)
                   forControlEvents:UIControlEventValueChanged];
     [self.tblDevices addSubview:self.refreshControl];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    NSLog(@"viewWillAppear");
     
     [self refreshDevices];
     
-    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(aTimerTick) userInfo:nil repeats:YES];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    timer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(aTimerTick) userInfo:nil repeats:YES];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    if ([timer isValid])
+    {
+        [timer invalidate];
+        self.timer = nil;
+        NSLog(@"Timer stop!");
+    }
+    
+    [super viewDidDisappear:animated];
+    NSLog(@"viewDidDisappear");
 }
 
 -(void)aTimerTick

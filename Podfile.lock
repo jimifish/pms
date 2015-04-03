@@ -21,19 +21,16 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - MBProgressHUD (0.9.1)
-  - SBJson (4.0.1)
   - TTOpenInAppActivity (1.0)
 
 DEPENDENCIES:
   - AFNetworking
   - MBProgressHUD
-  - SBJson
   - TTOpenInAppActivity
 
 SPEC CHECKSUMS:
   AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
-  MBProgressHUD: f3747dcbd45a9e855a6b0674550651e0b7ed250c
-  SBJson: d71212c078abf4679d54b0d0565260c474e46235
-  TTOpenInAppActivity: 9e1e206dd9b65127ae08e30333e6182d6587a102
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
+  TTOpenInAppActivity: c2218fe419d03ddd4ffb1f07d52d66e0d213d0d4
 
 COCOAPODS: 0.36.1

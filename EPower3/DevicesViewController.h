@@ -16,6 +16,8 @@
 
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 
+@property (nonatomic, strong) NSTimer* timer;
+
 -(void) refreshDevices;
 
 @end

@@ -51,6 +51,7 @@
 		BF888EF4182A39E00095B77A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF888EF3182A39E00095B77A /* Security.framework */; };
 		BF947F4A1842DF01003F308B /* DeviceDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF947F491842DF01003F308B /* DeviceDetailViewController.m */; };
 		BF947F51184380FA003F308B /* Images-3.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF947F50184380FA003F308B /* Images-3.xcassets */; };
+		BFD07CD61ACE78A7002CE7F0 /* libPods-MBProgressHUD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFD07CD51ACE78A7002CE7F0 /* libPods-MBProgressHUD.a */; };
 		CD3ED909C53446480AEE386A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3CDA6B9F162F682B34F863F /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -134,6 +135,7 @@
 		BF947F491842DF01003F308B /* DeviceDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceDetailViewController.m; sourceTree = "<group>"; };
 		BF947F50184380FA003F308B /* Images-3.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Images-3.xcassets"; sourceTree = "<group>"; };
 		BFB8C373182B871A00501395 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		BFD07CD51ACE78A7002CE7F0 /* libPods-MBProgressHUD.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-MBProgressHUD.a"; path = "Pods/../build/Debug-iphoneos/libPods-MBProgressHUD.a"; sourceTree = "<group>"; };
 		F3CDA6B9F162F682B34F863F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -142,6 +144,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFD07CD61ACE78A7002CE7F0 /* libPods-MBProgressHUD.a in Frameworks */,
 				BF4AD5121AC8463300CE137F /* libPods-TTOpenInAppActivity.a in Frameworks */,
 				BF4AD5101AC83D5900CE137F /* libPods-AFNetworking.a in Frameworks */,
 				BF888EF4182A39E00095B77A /* Security.framework in Frameworks */,
@@ -205,6 +208,7 @@
 		BF60FC43180F6B3C00E8C03E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BFD07CD51ACE78A7002CE7F0 /* libPods-MBProgressHUD.a */,
 				BF4AD5111AC8463300CE137F /* libPods-TTOpenInAppActivity.a */,
 				BF4AD50F1AC83D5900CE137F /* libPods-AFNetworking.a */,
 				BF4AD50D1AC8358100CE137F /* libPods.a */,

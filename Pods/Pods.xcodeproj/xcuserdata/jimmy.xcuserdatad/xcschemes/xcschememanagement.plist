@@ -14,11 +14,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-SBJson.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-TTOpenInAppActivity.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,47 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>03F4E45882C147AA86A4CB83</key>
+		<key>17CA73912EE6749223F9B2F1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3FF8A75B0D82B665B19CE99E</key>
+		<key>71FF19D2615F37862F3B9E63</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>40A1685E8794EFF06B2D4646</key>
+		<key>7F7ED2C4FDD152A3C935DFF4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>61E5E4A7053649719CF056E8</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>86D7311AF3A94CA29DE7A917</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8B29B8C0132EF4D989890D3F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>9AF38EF1C33E4099AB778B1C</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A481A4AF36726734CD899BAC</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>E654F52B9822793D6B9A0041</key>
+		<key>D3F34D3D3BE71B229FA776E2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
