@@ -122,6 +122,7 @@
     {
         strURL = [NSString stringWithFormat:@"%@%d&ticketId=%ld", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_FILE, (long)self.ticketId];
         lblFileName.text = self.imgFileName;
+        [self loadImage:strURL imgName:nil];
     }
     else
     {
@@ -134,28 +135,30 @@
         lblFileName.text = [dateFormatter stringFromDate:self.imgDate];
         
         strURL = [NSString stringWithFormat:@"%@%d&ComputerName=%@&FolderName=%@&FileName=%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_DEVICE_PIC, self.device.computerName, folderName, imageName];
+        
+        [self loadImage:strURL imgName:imageName];
     }
-    
-    NSLog(@"%@", strURL);
-    
-    [self loadImage:strURL];
 }
 
 -(void)showProgress{
     [m_progressAlert show];
 }
 
--(void)loadImage: (NSString*) strURL{
+-(void)loadImage: (NSString*) strURL imgName:(NSString*)imageName {
     
     [self showProgress];
     
-//    self.imgDate = [Helper GetPicDate:imageName];
-//    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-//    [dateFormatter setDateFormat:@"HH:mm:ss"];
-//    lblFileName.text = [dateFormatter stringFromDate:self.imgDate];
+    if(imageName != nil)
+    {
+        self.imgDate = [Helper GetPicDate:imageName];
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm:ss"];
+        lblFileName.text = [dateFormatter stringFromDate:self.imgDate];
+        
+//        float w = [[UIScreen mainScreen] bounds].size.width;
+//        lblFileName.frame = CGRectMake(0, 10, w, 20);
+    }
 
-//    float w = [[UIScreen mainScreen] bounds].size.width;
-//    lblFileName.frame = CGRectMake(0, 10, w, 20);
 
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
@@ -260,7 +263,7 @@
     
     NSString* strURL = [NSString stringWithFormat:@"%@%d&ComputerName=%@&FolderName=%@&FileName=%@", PMS_WEBAPP_REQ_URI, SRV_CLINET_REQ_GET_DEVICE_PIC, self.device.computerName, folderName, imageName];
     
-    [self loadImage:strURL];
+    [self loadImage:strURL imgName:imageName];
     
 }
 
