@@ -18,6 +18,7 @@
 //@property (nonatomic, strong) NSMutableArray* thumbList;
 @property (nonatomic, strong) NSMutableDictionary* dictThumb;
 @property (nonatomic, strong) NSMutableDictionary* thumbImg;
+@property (nonatomic, strong) NSMutableDictionary* dictTmp;
 @property (strong, nonatomic) Device* device;
 @property (strong, nonatomic) NSString* folderName;
 @property (strong, nonatomic) UIAlertView* m_progressAlert;
