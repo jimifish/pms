@@ -35,7 +35,7 @@
 @synthesize refreshControl;
 @synthesize tblThumbnail;
 @synthesize m_progressAlert;
-const int NCOUNT = 20;
+const int NCOUNT = 10;
 
 #pragma mark - DeviceImageViewControllerDelegate
 
