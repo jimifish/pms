@@ -25,6 +25,6 @@
 
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 
--(void) refresh;
+//-(void) refresh;
 
 @end
