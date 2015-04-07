@@ -254,7 +254,6 @@ const int NCOUNT = 10;
     if(indexPath.row % NCOUNT == 0 && _downloadCount < nextDownloadNum)
     {
         NSLog(@"indexPath.row: %ld, all thumb: %ld, Show hud", indexPath.row, [dictThumb count]);
-        [self showHud];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self downloadThumbs:nextDownloadNum fileNameForDownload:nil];
@@ -301,7 +300,7 @@ const int NCOUNT = 10;
  */
 -(void)downloadThumbList
 {
-    //[self showHud];
+    [self showHud];
     
     dictThumb = [[NSMutableDictionary alloc]init];
     
