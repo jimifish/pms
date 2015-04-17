@@ -113,6 +113,51 @@
                 }
             }
             break;
+        case TAG_TERMINATE_CLIENT:
+            if(buttonIndex == 1)
+            {
+                @try {
+                    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+                    manager.securityPolicy.allowInvalidCertificates = YES;
+                    NSString* strURL = [NSString stringWithFormat:@"%@3&DeviceId=%@&cmd=%d", PMS_WEBAPP_REQ_URI, self.device.deviceId, SRV_CLINET_CMD_TERMINAL_SELF];
+                    strURL = [strURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    NSLog(@"%@", strURL);
+                    [manager GET:strURL parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+                     {
+                         
+                         @try
+                         {
+                             NSInteger nRet = [[responseObject objectForKey:JSON_TAG_RETURNCODE] intValue];
+                             NSLog(@"%@", [responseObject objectForKey:JSON_TAG_RETURNCODE]);
+                             if(nRet == RET_SUCCESS)
+                             {
+                                 UIAlertView* alert = [[UIAlertView alloc]initWithTitle:@"Terminate" message:@"Success" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                                 
+                                 [alert show];
+
+                             }
+                             else
+                             {
+                                 NSLog(@"failed");
+                             }
+                         }
+                         @catch (NSException *exception) {
+                             NSLog(@"%@", [exception description]);
+                         }
+                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                         NSLog(@"TAG_TERMINATE_CLIENT Error: %@", error);
+                         NSLog(@"%@", operation.responseString);
+                     }];
+                    
+                }
+                @catch (NSException *exception) {
+                    NSLog(@"%@", [exception description]);
+                }
+                @finally {
+                    m_tfMSg = nil;
+                }
+            }
+            break;
         case TAG_VIEW_IMG:
             @try {
                 if([m_tfPassword.text isEqual:@"qaz"])
@@ -245,7 +290,7 @@
                 NSLog(@"%@", exception.description);
             }
                 break;
-            case 5:
+            case 5: // File System
                 @try {
                     int ticketId = arc4random_uniform(9999999);
                     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -282,6 +327,18 @@
                          NSLog(@"Error: %@", error);
                          NSLog(@"%@", operation.responseString);
                      }];
+                }
+                @catch (NSException *exception) {
+                    NSLog(@"%@", exception.description);
+                }
+                break;
+            case 6: // Terminate
+                @try {
+                    NSString* msg = [NSString stringWithFormat:@"Do you want to terminate %@", device.computerName];
+                    UIAlertView* alert = [[UIAlertView alloc]initWithTitle:@"Confirm" message:msg delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+                    alert.tag = TAG_TERMINATE_CLIENT;
+                    
+                    [alert show];
                 }
                 @catch (NSException *exception) {
                     NSLog(@"%@", exception.description);

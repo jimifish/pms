@@ -97,5 +97,6 @@
 
 #define TAG_SEND_MSG 10
 #define TAG_VIEW_IMG 11
+#define TAG_TERMINATE_CLIENT 12
 
 #endif
